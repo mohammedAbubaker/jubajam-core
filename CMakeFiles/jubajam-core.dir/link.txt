@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++20 "CMakeFiles/jubajam-core.dir/src/main.cpp.o" -o jubajam-core  deps/glad/libglad.a deps/glfw-3.4/src/libglfw3.a deps/glm/glm/libglm.a /usr/lib/librt.a -lm -ldl

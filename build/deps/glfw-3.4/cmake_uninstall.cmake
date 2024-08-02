@@ -1,9 +1,9 @@
 
-if (NOT EXISTS "/home/algiers/jubajam-core/build/deps/glfw-3.4/install_manifest.txt")
-    message(FATAL_ERROR "Cannot find install manifest: \"/home/algiers/jubajam-core/build/deps/glfw-3.4/install_manifest.txt\"")
+if (NOT EXISTS "/home/mo/jubajam-core/build/deps/glfw-3.4/install_manifest.txt")
+    message(FATAL_ERROR "Cannot find install manifest: \"/home/mo/jubajam-core/build/deps/glfw-3.4/install_manifest.txt\"")
 endif()
 
-file(READ "/home/algiers/jubajam-core/build/deps/glfw-3.4/install_manifest.txt" files)
+file(READ "/home/mo/jubajam-core/build/deps/glfw-3.4/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 
 foreach (file ${files})
