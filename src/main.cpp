@@ -30,6 +30,46 @@ struct TextureObject {
     std::vector<unsigned char> texture_data;
 };
 
+struct VertexObject {
+    float x;
+    float y;
+    float z;
+    float u;
+    float v;
+};
+
+std::string read_file(std::string file_path)
+{
+    std::ifstream file(file_path.c_str());
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
+std::vector<std::string> split_string_by_delimiter(std::string delimiter, std::string input_string)
+{
+    std::string substring = "";
+    std::vector<std::string> result;
+    int i = 0;
+    while (i < input_string.length()) {
+        std::string token = input_string.substr(i, delimiter.length());
+        if (token == delimiter) {
+            result.push_back(substring);
+            substring = "";
+            i += delimiter.size();
+            continue;
+        }
+        substring += input_string[i];
+        i += 1;
+    }
+
+    if (!substring.empty()) {
+        result.push_back(substring);
+    }
+
+    return result;
+}
+
 struct RenderContext {
     GLuint program_id;
 
@@ -74,14 +114,6 @@ struct RenderContext {
         }
 
         return true;
-    }
-
-    static std::string read_file(std::string file_path)
-    {
-        std::ifstream file(file_path.c_str());
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        return buffer.str();
     }
 
     void load_mvp(glm::vec3 pos, float viewing_angle)
@@ -177,32 +209,36 @@ struct RenderContext {
         glfwPollEvents();
     }
 
-    void draw_triangle() {}
+    std::vector<float> draw_mesh() {
+        // Will contain all the points
+        std::vector<float> vertex_data_buffer;
+        std::vector<std::string> texture_names = { "l_legs", "h_head", "u_torso" };
+        for (std::string texture_name : texture_names) {
+            // load the corresponding vertex data
+            std::vector<std::string> vertex_data = split_string_by_delimiter(
+                "\n",
+                read_file("../src/" + texture_name));
+
+            for (std::string vertex : vertex_data) {
+                std::cout << vertex << std::endl;
+                // a vertex is a line in the form "x y z u v"
+                std::vector<std::string> xyzuv = split_string_by_delimiter(
+                    " ",
+                    vertex);
+
+                vertex_data_buffer.push_back(std::stof(xyzuv.at(0)));
+                vertex_data_buffer.push_back(std::stof(xyzuv.at(1)));
+                vertex_data_buffer.push_back(std::stof(xyzuv.at(2)));
+
+                // vertex_data_buffer.push_back(std::stof(xyzuv.at(3)));
+                // vertex_data_buffer.push_back(std::stof(xyzuv.at(4)));
+            }
+        }
+        return vertex_data_buffer;
+    }
 };
 
-std::vector<std::string> split_string_by_delimiter(std::string delimiter, std::string input_string)
-{
-    std::string substring = "";
-    std::vector<std::string> result;
-    int i = 0;
-    while (i < input_string.length()) {
-        std::string token = input_string.substr(i, delimiter.length());
-        if (token == delimiter) {
-            result.push_back(substring);
-            substring = "";
-            i += delimiter.size();
-            continue;
-        }
-        substring += input_string[i];
-        i += 1;
-    }
 
-    if (!substring.empty()) {
-        result.push_back(substring);
-    }
-
-    return result;
-}
 
 struct FaceElement {
     glm::vec3 vertex;
@@ -309,8 +345,8 @@ struct OBJ {
             size_t texture_index = std::stoi(face_elements.at(1));
             size_t normal_index = std::stoi(face_elements.at(2));
 
+            FaceElement {
             face_element_container.push_back(
-                FaceElement {
                     .vertex = this->vertex_set.at(vertex_index - 1),
                     .normal = this->normal_set.at(normal_index - 1),
                     .texture = this->texture_set.at(texture_index - 1) });
@@ -351,59 +387,6 @@ struct OBJ {
 
         return vertices;
     }
-
-    void bind_buffer_data()
-    {
-        // Define a list of texture names
-        // These are the names referenced in the OBJ file.
-        std::vector<std::string> texture_names = { "l_legs", "h_head", "u_torso" };
-        // Then define the associations
-        std::unordered_map<std::string, std::string> texture_name_to_path;
-        texture_name_to_path["l_legs"] = "../assets/futurefemale/legs1.tga";
-        texture_name_to_path["h_head"] = "../assets/futurefemale/head1.tga";
-        texture_name_to_path["u_torso"] = "../assets/futurefemale/torso1.tga";
-
-        std::unordered_map<std::string, TextureObject> texture_name_to_object;
-        // Then load all the texture data into a seperate map
-        for (std::string texture_name : texture_names) {
-            int width, height, nrChannels;
-            // load the data
-            unsigned char* data = stbi_load(
-                texture_name_to_path[texture_name].c_str(),
-                &width,
-                &height,
-                &nrChannels,
-                0);
-            // convert into vector
-            std::vector<unsigned char> texture_data(
-                data,
-                data + (width * height));
-            // create a texture TextureObject
-            TextureObject texture_object = {
-                .width = width,
-                .height = height,
-                .nrChannels = nrChannels,
-                .texture_data = texture_data
-            };
-            texture_name_to_object[texture_name] = texture_object;
-        }
-
-        /*
-                std::string path_to_mesh = "../assets/futurefemale/";
-        for (auto it : tex_id_to_dat.items()) {
-            std::cout << it.key() << std::endl;
-            // std::unordered_map<std::string, std::string> tex_id_to_path;
-
-            unsigned int tex;
-            glGenTextures(1k, &tex);
-            glBindTexture(GL_TEXTURE_2D, tex);
-
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            */
-    }
 };
 
 int main()
@@ -411,36 +394,48 @@ int main()
 
     OBJ obj;
 
-    obj.bind_buffer_data();
-
     RenderContext render_context;
+    // obj.bind_buffer_data();
     if (!render_context.make_window(1024, 768, "Hello World")) {
         return -1;
     }
-
     // Load vertex shader
     std::string vertex_shader_code
-        = render_context.read_file("../src/vertex.glsl");
-    std::string fragment_shader_code = render_context.read_file("../src/fragment.glsl");
+        = read_file("../src/vertex.glsl");
+    std::string fragment_shader_code = read_file("../src/fragment.glsl");
     render_context.load_shaders(vertex_shader_code, fragment_shader_code);
 
-    glm::vec3 pos = glm::vec3(3.f, 4.f, 3.f);
-    float viewing_angle = 0.f;
+    glm::vec3 pos = glm::vec3(3.f, 4.f, 5.f);
+    float viewing_angle = 3.f;
+    
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    std::vector<float> g_vertex_buffer_data = render_context.draw_mesh();
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+    // glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    std::cout << g_vertex_buffer_data.size() << std::endl;
 
     while (!glfwWindowShouldClose(render_context.window)) {
         render_context.load_mvp(pos, glm::radians(viewing_angle));
-
         glClear(GL_COLOR_BUFFER_BIT);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glEnableVertexAttribArray(0);
-
-        // glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-        // glDrawArrays(GL_TRIANGLES, 0, g_vertex_buffer_data.size() / 3);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(
+            0, 
+            3, 
+            GL_FLOAT, 
+            GL_FALSE, 
+            3 * sizeof(float), 
+            (void*)0
+        );
+        glDrawArrays(GL_TRIANGLES, 0, g_vertex_buffer_data.size() / 3);
         glDisableVertexAttribArray(0);
-
         int state = glfwGetKey(render_context.window, GLFW_KEY_W);
         if (state == GLFW_PRESS) {
-            pos += glm::vec3(0.1f, 0.0f, 0.0f);
+            pos += glm::vec3(0.1f, 0.0f, 50.0f);
         }
 
         state = glfwGetKey(render_context.window, GLFW_KEY_S);
@@ -467,9 +462,8 @@ int main()
         if (state == GLFW_PRESS) {
             viewing_angle += 2.f;
         }
-
-        render_context.update_screen();
         render_context.apply_mvp();
+        render_context.update_screen();
     }
     return 0;
 }
