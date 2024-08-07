@@ -1,6 +1,3 @@
-rm -rf compile_commands.json
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=on .
-cd build
-cmake ..
-make
+cmake -Bbuild-cmake -H. -GNinja
+cd build-cmake && cmake --build .
 ./jubajam-core

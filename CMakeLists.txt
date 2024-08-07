@@ -8,9 +8,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(jubajam-core)
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} 
+    src/parser.cpp
+    src/main.cpp
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/deps/glad)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 
@@ -19,6 +23,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/deps/glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm)
+
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/deps/json)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json)

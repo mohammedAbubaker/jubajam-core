@@ -21,7 +21,19 @@
 #include "unordered_map"
 #include <nlohmann/json.hpp>
 
+#include <chrono>
+#include <cstdlib>
+
 #include <vector>
+#include "parser.h"
+
+std::string read_file(std::string file_path)
+{
+    std::ifstream file(file_path.c_str());
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
 
 struct TextureObject {
     int width;
@@ -38,13 +50,7 @@ struct VertexObject {
     float v;
 };
 
-std::string read_file(std::string file_path)
-{
-    std::ifstream file(file_path.c_str());
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
+
 
 std::vector<std::string> split_string_by_delimiter(std::string delimiter, std::string input_string)
 {
@@ -70,6 +76,14 @@ std::vector<std::string> split_string_by_delimiter(std::string delimiter, std::s
     return result;
 }
 
+struct RenderObject {
+    std::vector<float> vertex_data;
+    std::vector<unsigned char> texture_data;
+    int width;
+    int height;
+};
+
+
 struct RenderContext {
     GLuint program_id;
 
@@ -78,6 +92,10 @@ struct RenderContext {
     glm::mat4 mvp;
 
     GLFWwindow* window;
+
+    glm::mat3 rot;
+
+    GLuint rot_id;
 
     /*
      * Makes a window and returns its success.
@@ -137,6 +155,37 @@ struct RenderContext {
         // Get a handle for the matrix
         this->matrix_id = glGetUniformLocation(this->program_id, "MVP");
     }
+
+    void rotate_model(double angle) {
+        std::chrono::milliseconds ms = duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+        float current_ms = (ms.count() % 60);
+        std::cout << current_ms << std::endl;
+        
+        // take 5 seconds to do 1 360... 
+        angle += (current_ms * 3);
+        if (angle >= 360.0) {
+            angle = 0.0;
+        }
+
+        // convert to radians
+        double angle_radians = glm::radians(angle);
+        angle_radians = 0;
+        glm::mat4 rot = glm::mat3(
+            std::cos(angle_radians),    0,  std::sin(angle_radians),
+            0,                          1,  0,
+            -std::sin(angle_radians),   0,  std::cos(angle_radians)
+        );
+        this->rot = rot;
+        this->rot_id = glGetUniformLocation(this->program_id, "ROT");
+    }
+
+    void apply_rot()
+    {
+        glUniformMatrix3fv(this->rot_id, 1, GL_FALSE, &this->rot[0][0]);
+    }
+
 
     void apply_mvp()
     {
@@ -209,32 +258,62 @@ struct RenderContext {
         glfwPollEvents();
     }
 
-    std::vector<float> draw_mesh() {
+    std::vector<RenderObject> draw_mesh() {
+        std::vector<RenderObject> render_objects;
         // Will contain all the points
-        std::vector<float> vertex_data_buffer;
         std::vector<std::string> texture_names = { "l_legs", "h_head", "u_torso" };
+        // texture name to image path
+        std::unordered_map<std::string, std::string> texture_name_to_path;
+        texture_name_to_path["l_legs"] = "../assets/futurefemale/legs1.tga";
+        texture_name_to_path["h_head"] = "../assets/futurefemale/head1.tga";
+        texture_name_to_path["u_torso"] = "../assets/futurefemale/torso1.tga";
+        
         for (std::string texture_name : texture_names) {
+            std::vector<float> vertex_data_buffer;
+            // load texture data
+            int width, height, nrChannels;
+            unsigned char* data = stbi_load(
+                    texture_name_to_path[texture_name].c_str(), 
+                    &width, 
+                    &height, 
+                    &nrChannels, 
+                    0
+            );
+
+            stbi_set_flip_vertically_on_load(true);
+
+            std::vector<unsigned char> texture_data(data, data + (width*height*nrChannels));
             // load the corresponding vertex data
             std::vector<std::string> vertex_data = split_string_by_delimiter(
                 "\n",
                 read_file("../src/" + texture_name));
 
             for (std::string vertex : vertex_data) {
-                std::cout << vertex << std::endl;
                 // a vertex is a line in the form "x y z u v"
                 std::vector<std::string> xyzuv = split_string_by_delimiter(
                     " ",
                     vertex);
-
+                // Position coordinates
                 vertex_data_buffer.push_back(std::stof(xyzuv.at(0)));
                 vertex_data_buffer.push_back(std::stof(xyzuv.at(1)));
                 vertex_data_buffer.push_back(std::stof(xyzuv.at(2)));
-
-                // vertex_data_buffer.push_back(std::stof(xyzuv.at(3)));
-                // vertex_data_buffer.push_back(std::stof(xyzuv.at(4)));
+                // UV coordinates
+                vertex_data_buffer.push_back(std::stof(xyzuv.at(3)));
+                vertex_data_buffer.push_back(std::stof(xyzuv.at(4)));
             }
+
+            // create a render object
+            RenderObject render_object = RenderObject{
+                .vertex_data = vertex_data_buffer, 
+                .texture_data = texture_data,
+                .width = width,
+                .height = height,
+            };
+            render_objects.push_back(render_object);
+
+            stbi_image_free(data);
         }
-        return vertex_data_buffer;
+        return render_objects;
     }
 };
 
@@ -251,6 +330,7 @@ struct Face {
     FaceElement face_element_1;
     FaceElement face_element_2;
 };
+
 
 struct OBJ {
 
@@ -389,7 +469,7 @@ struct OBJ {
     }
 };
 
-int main()
+int nope()
 {
 
     OBJ obj;
@@ -399,41 +479,121 @@ int main()
     if (!render_context.make_window(1024, 768, "Hello World")) {
         return -1;
     }
+
+    GLuint vertex_array_id;
+    glGenVertexArrays(1, &vertex_array_id);
+    glBindVertexArray(vertex_array_id);
+
     // Load vertex shader
     std::string vertex_shader_code
         = read_file("../src/vertex.glsl");
     std::string fragment_shader_code = read_file("../src/fragment.glsl");
     render_context.load_shaders(vertex_shader_code, fragment_shader_code);
+    std::vector<RenderObject> render_objects = render_context.draw_mesh();
 
-    glm::vec3 pos = glm::vec3(3.f, 4.f, 5.f);
-    float viewing_angle = 3.f;
+    glm::vec3 pos = glm::vec3(0.f, 20.f, -100.f);
+    float viewing_angle = 90.f;
     
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    std::vector<float> g_vertex_buffer_data = render_context.draw_mesh();
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+    // GLuint vao;
+    std::vector<GLuint> vbos;
+    std::vector<GLuint> txos;
+    std::vector<int> sizes;
+    int i = 0;
+
+     
+    // glCreateVertexArrays(1, &vao);
+
+    for (RenderObject render_object: render_objects) {
+        std::cout << render_object.texture_data.size() << std::endl;
+        std::cout << render_object.width << std::endl;
+        std::cout << render_object.height << std::endl;
+
+        GLuint vbo;
+        GLuint txo;
+
+        glCreateBuffers(1, &vbo); 
+        std::cout << vbo << std::endl;
+        glNamedBufferStorage(
+                vbo, 
+                render_object.vertex_data.size() * sizeof(float),
+                &render_object.vertex_data[0],
+                GL_DYNAMIC_STORAGE_BIT
+        );
+
+        // glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(float) * 5);
+        
+        
+        // glCreateTextures(GL_TEXTURE_2D, 1, &txo);
+        glGenTextures(1, &txo);
+        glBindTexture(GL_TEXTURE_2D, txo);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, render_object.width, render_object.height, 0, GL_RGB, GL_UNSIGNED_BYTE, &render_object.texture_data[0]);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        // glBindTextureUnit(vbos.size(), txo);
+        // glGenerateMipmap(GL_TEXTURE_2D);
+
+        vbos.push_back(vbo);
+        txos.push_back(txo);
+        sizes.push_back(render_object.vertex_data.size());
+        // glDisable(GL_TEXTURE_2D);
+        //
+               
+    }
+    
+    /*
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    */
+
+
+       
     // glEnableVertexAttribArray(0);
     // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    
+    // std::cout << g_vertex_buffer_data.size() << std::endl;
+    //
+    //               
+    // glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEBUG_OUTPUT);
 
-    std::cout << g_vertex_buffer_data.size() << std::endl;
+    int sum_of_vertices = 0;
+    for (int s: sizes) {
+        sum_of_vertices += s;
+    }
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    float current_angle = 0;
     while (!glfwWindowShouldClose(render_context.window)) {
         render_context.load_mvp(pos, glm::radians(viewing_angle));
-        glClear(GL_COLOR_BUFFER_BIT);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(
-            0, 
-            3, 
-            GL_FLOAT, 
-            GL_FALSE, 
-            3 * sizeof(float), 
-            (void*)0
-        );
-        glDrawArrays(GL_TRIANGLES, 0, g_vertex_buffer_data.size() / 3);
-        glDisableVertexAttribArray(0);
-        int state = glfwGetKey(render_context.window, GLFW_KEY_W);
+        render_context.rotate_model(current_angle);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // glBindTexture(GL_TEXTURE_2D, txos.at(0));
+
+        for (int i = 0; i < vbos.size(); i++) {
+            glBindBuffer(GL_ARRAY_BUFFER, vbos.at(i));
+            glBindTexture(GL_TEXTURE_2D, txos.at(i));
+            glGetError();
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+
+            glDrawArrays(GL_TRIANGLES, 0, sizes.at(i) / 3);
+            glDisableVertexAttribArray(0);
+            glDisableVertexAttribArray(1);
+        }
+        // glBindVertexArray(vao);
+        // // glDrawArrays(GL_TRIANGLES, 0, sum_of_vertices / 3);
+                int state = glfwGetKey(render_context.window, GLFW_KEY_W);
         if (state == GLFW_PRESS) {
             pos += glm::vec3(0.1f, 0.0f, 50.0f);
         }
@@ -463,7 +623,14 @@ int main()
             viewing_angle += 2.f;
         }
         render_context.apply_mvp();
+        render_context.apply_rot();
         render_context.update_screen();
+
     }
+
+    GLTFfile ob2j;
+    ob2j.lol();
+
     return 0;
 }
+

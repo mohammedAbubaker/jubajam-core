@@ -1,7 +1,5 @@
 from PIL import Image
 import numpy as np
-import json
-
 vertices = []
 texture = []
 final = ""
@@ -23,9 +21,10 @@ texture_id_to_xyzuv = {}
 current_tex = None
 with open("../assets/futurefemale/jkm_female1.obj") as obj:
     while line := obj.readline():
+        line = line[:-1]
         if line.startswith("o "):
-            if current_tex !=None:
-                texture_id_to_xyzuv[current_tex[:-1]] = final
+            if current_tex is not None:
+                texture_id_to_xyzuv[current_tex] = final
                 final = ""
             current_tex = line.split(" ")[-1]
             continue
@@ -42,25 +41,27 @@ with open("../assets/futurefemale/jkm_female1.obj") as obj:
             texture.append((u, v))
         if line.startswith("f "):
             faces = line.split(" ")
+            if len(faces) != 4:
+                continue
             for face in faces:
                 if face == "f":
                     continue
                 face_vertices = face.split("/")
                 selected_vertex = vertices[int(face_vertices[0]) - 1]
-                selected_tex = texture[int(face_vertices[-1]) - 1]
+                selected_tex = texture[int(face_vertices[1]) - 1]
                 final += str((selected_vertex[0]))
                 final += " "
                 final += str((selected_vertex[1]))
                 final += " "
                 final += str((selected_vertex[2]))
                 final += " "
-                final += str((selected_tex[0]))
+                final += str(selected_tex[0])
                 final += " "
-                final += str((selected_tex[1]))
+                final += str(selected_tex[1])
                 final += "\n"
 
-if current_tex != None:
-    texture_id_to_xyzuv[current_tex[:-1]] = final
+if current_tex is not None: 
+    texture_id_to_xyzuv[current_tex] = final
     for tex_id, vert_dat in texture_id_to_xyzuv.items():
         with open(f"{tex_id}", "w") as file:
             file.write(vert_dat)
