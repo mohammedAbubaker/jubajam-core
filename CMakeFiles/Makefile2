@@ -204,12 +204,12 @@ CMakeFiles/jubajam-core.dir/all: deps/glfw-3.4/src/CMakeFiles/glfw.dir/all
 CMakeFiles/jubajam-core.dir/all: deps/glm/glm/CMakeFiles/glm.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/jubajam-core.dir/build.make CMakeFiles/jubajam-core.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/jubajam-core.dir/build.make CMakeFiles/jubajam-core.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=50,51 "Built target jubajam-core"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=50,51,52 "Built target jubajam-core"
 .PHONY : CMakeFiles/jubajam-core.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/jubajam-core.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 51
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 52
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/jubajam-core.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 0
 .PHONY : CMakeFiles/jubajam-core.dir/rule
@@ -308,7 +308,7 @@ deps/glfw-3.4/src/CMakeFiles/glfw.dir/clean:
 deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/all:
 	$(MAKE) $(MAKESILENT) -f deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/build.make deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/depend
 	$(MAKE) $(MAKESILENT) -f deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/build.make deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=52 "Built target update_mappings"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=53 "Built target update_mappings"
 .PHONY : deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/all
 
 # Build rule for subdir invocation for target.

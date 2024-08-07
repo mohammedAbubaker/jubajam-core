@@ -628,8 +628,6 @@ int nope()
 
     }
 
-    GLTFfile ob2j;
-    ob2j.lol();
 
     return 0;
 }

@@ -3,6 +3,7 @@
 #include "parser.h"
 #include <fstream>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 std::string read_model(std::string file_path)
 {
@@ -12,15 +13,19 @@ std::string read_model(std::string file_path)
     return buffer.str();
 }
 
-void ParseOBJ::print_obj() {
-    std::cout << "bazooka" << std::endl;
-};
+std::vector<BasicModelData> ParseModel::parse_model(std::string path) 
+{
+    nlohmann::json model = nlohmann::json::parse(read_model(path));
+    for (auto it : model.items()) 
+    {
+        std::cout << "type: " << it.value().type_name() << std::endl;
+    }
+}
 
-void GLTFfile::lol() {
-    std::cout << "looool" << std::endl;
-};
+
 
 int main () {
-    std::string model = read_model("../assets/Monster.gltf");
-    std::cout << model << std::endl;
+    ParseModel model_parser;
+    model_parser.parse_model("../assets/Monster.gltf");
+    return 0;
 }
