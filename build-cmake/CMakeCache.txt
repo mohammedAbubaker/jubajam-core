@@ -439,6 +439,26 @@ PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 //Path to a library.
 RT_LIBRARY:FILEPATH=/usr/lib/librt.a
 
+//Build glTF builder example
+TINYGLTF_BUILD_BUILDER_EXAMPLE:BOOL=OFF
+
+//Build GL exampels(requires glfw, OpenGL, etc)
+TINYGLTF_BUILD_GL_EXAMPLES:BOOL=OFF
+
+//Build loader_example(load glTF and dump infos)
+TINYGLTF_BUILD_LOADER_EXAMPLE:BOOL=ON
+
+//Build validator exampe
+TINYGLTF_BUILD_VALIDATOR_EXAMPLE:BOOL=OFF
+
+//On: header-only mode. Off: create tinygltf library(No TINYGLTF_IMPLEMENTATION
+// required in your project)
+TINYGLTF_HEADER_ONLY:BOOL=OFF
+
+//Install tinygltf files during install step. Usually set to OFF
+// if you include tinygltf through add_subdirectory()
+TINYGLTF_INSTALL:BOOL=ON
+
 //Path to a program.
 WAYLAND_SCANNER_EXECUTABLE:FILEPATH=/usr/bin/wayland-scanner
 
@@ -892,6 +912,15 @@ pkgcfg_lib_Wayland_wayland-egl:FILEPATH=/usr/lib/libwayland-egl.so
 //Path to a library.
 pkgcfg_lib_Wayland_xkbcommon:FILEPATH=/usr/lib/libxkbcommon.so
 
+//Value Computed by CMake
+tinygltf_BINARY_DIR:STATIC=/home/mo/jubajam-core/build-cmake/include/tinygltf
+
+//Value Computed by CMake
+tinygltf_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+tinygltf_SOURCE_DIR:STATIC=/home/mo/jubajam-core/include/tinygltf
+
 
 ########################
 # INTERNAL cache entries
@@ -1041,7 +1070,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=9
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

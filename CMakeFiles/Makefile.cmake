@@ -24,6 +24,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "deps/json/cmake/config.cmake.in"
   "deps/json/cmake/nlohmann_jsonConfigVersion.cmake.in"
   "deps/json/cmake/pkg-config.pc.in"
+  "include/tinygltf/CMakeLists.txt"
+  "include/tinygltf/cmake/TinyGLTFConfig.cmake.in"
   "/usr/share/cmake/Modules/BasicConfigVersion-SameMajorVersion.cmake.in"
   "/usr/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCXXInformation.cmake"
@@ -89,6 +91,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "deps/json/nlohmann_jsonConfigVersion.cmake"
   "deps/json/nlohmann_jsonConfig.cmake"
   "deps/json/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "include/tinygltf/TinyGLTFConfig.cmake"
+  "include/tinygltf/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
@@ -99,4 +103,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "deps/glfw-3.4/src/CMakeFiles/glfw.dir/DependInfo.cmake"
   "deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/DependInfo.cmake"
   "deps/glm/glm/CMakeFiles/glm.dir/DependInfo.cmake"
+  "include/tinygltf/CMakeFiles/loader_example.dir/DependInfo.cmake"
+  "include/tinygltf/CMakeFiles/tinygltf.dir/DependInfo.cmake"
   )

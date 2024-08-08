@@ -14,7 +14,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/deps/glad)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 
@@ -24,6 +24,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 add_subdirectory(${CMAKE_SOURCE_DIR}/deps/glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm)
 
-
 add_subdirectory(${CMAKE_SOURCE_DIR}/deps/json)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/include/tinygltf/)
+target_link_libraries(${PROJECT_NAME} PRIVATE tinygltf)

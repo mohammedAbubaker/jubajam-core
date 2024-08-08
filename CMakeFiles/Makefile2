@@ -68,6 +68,7 @@ all: deps/glad/all
 all: deps/glfw-3.4/all
 all: deps/glm/all
 all: deps/json/all
+all: include/tinygltf/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -75,6 +76,7 @@ preinstall: deps/glad/preinstall
 preinstall: deps/glfw-3.4/preinstall
 preinstall: deps/glm/preinstall
 preinstall: deps/json/preinstall
+preinstall: include/tinygltf/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
@@ -83,6 +85,7 @@ clean: deps/glad/clean
 clean: deps/glfw-3.4/clean
 clean: deps/glm/clean
 clean: deps/json/clean
+clean: include/tinygltf/clean
 .PHONY : clean
 
 #=============================================================================
@@ -196,12 +199,30 @@ deps/json/clean:
 .PHONY : deps/json/clean
 
 #=============================================================================
+# Directory level rules for directory include/tinygltf
+
+# Recursive "all" directory target.
+include/tinygltf/all: include/tinygltf/CMakeFiles/loader_example.dir/all
+include/tinygltf/all: include/tinygltf/CMakeFiles/tinygltf.dir/all
+.PHONY : include/tinygltf/all
+
+# Recursive "preinstall" directory target.
+include/tinygltf/preinstall:
+.PHONY : include/tinygltf/preinstall
+
+# Recursive "clean" directory target.
+include/tinygltf/clean: include/tinygltf/CMakeFiles/loader_example.dir/clean
+include/tinygltf/clean: include/tinygltf/CMakeFiles/tinygltf.dir/clean
+.PHONY : include/tinygltf/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/jubajam-core.dir
 
 # All Build rule for target.
 CMakeFiles/jubajam-core.dir/all: deps/glad/CMakeFiles/glad.dir/all
 CMakeFiles/jubajam-core.dir/all: deps/glfw-3.4/src/CMakeFiles/glfw.dir/all
 CMakeFiles/jubajam-core.dir/all: deps/glm/glm/CMakeFiles/glm.dir/all
+CMakeFiles/jubajam-core.dir/all: include/tinygltf/CMakeFiles/tinygltf.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/jubajam-core.dir/build.make CMakeFiles/jubajam-core.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/jubajam-core.dir/build.make CMakeFiles/jubajam-core.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=50,51,52 "Built target jubajam-core"
@@ -209,7 +230,7 @@ CMakeFiles/jubajam-core.dir/all: deps/glm/glm/CMakeFiles/glm.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/jubajam-core.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 52
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 54
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/jubajam-core.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 0
 .PHONY : CMakeFiles/jubajam-core.dir/rule
@@ -308,7 +329,7 @@ deps/glfw-3.4/src/CMakeFiles/glfw.dir/clean:
 deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/all:
 	$(MAKE) $(MAKESILENT) -f deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/build.make deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/depend
 	$(MAKE) $(MAKESILENT) -f deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/build.make deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=53 "Built target update_mappings"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=57 "Built target update_mappings"
 .PHONY : deps/glfw-3.4/src/CMakeFiles/update_mappings.dir/all
 
 # Build rule for subdir invocation for target.
@@ -352,6 +373,58 @@ glm: deps/glm/glm/CMakeFiles/glm.dir/rule
 deps/glm/glm/CMakeFiles/glm.dir/clean:
 	$(MAKE) $(MAKESILENT) -f deps/glm/glm/CMakeFiles/glm.dir/build.make deps/glm/glm/CMakeFiles/glm.dir/clean
 .PHONY : deps/glm/glm/CMakeFiles/glm.dir/clean
+
+#=============================================================================
+# Target rules for target include/tinygltf/CMakeFiles/loader_example.dir
+
+# All Build rule for target.
+include/tinygltf/CMakeFiles/loader_example.dir/all:
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/loader_example.dir/build.make include/tinygltf/CMakeFiles/loader_example.dir/depend
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/loader_example.dir/build.make include/tinygltf/CMakeFiles/loader_example.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=53,54 "Built target loader_example"
+.PHONY : include/tinygltf/CMakeFiles/loader_example.dir/all
+
+# Build rule for subdir invocation for target.
+include/tinygltf/CMakeFiles/loader_example.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 include/tinygltf/CMakeFiles/loader_example.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 0
+.PHONY : include/tinygltf/CMakeFiles/loader_example.dir/rule
+
+# Convenience name for target.
+loader_example: include/tinygltf/CMakeFiles/loader_example.dir/rule
+.PHONY : loader_example
+
+# clean rule for target.
+include/tinygltf/CMakeFiles/loader_example.dir/clean:
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/loader_example.dir/build.make include/tinygltf/CMakeFiles/loader_example.dir/clean
+.PHONY : include/tinygltf/CMakeFiles/loader_example.dir/clean
+
+#=============================================================================
+# Target rules for target include/tinygltf/CMakeFiles/tinygltf.dir
+
+# All Build rule for target.
+include/tinygltf/CMakeFiles/tinygltf.dir/all:
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/tinygltf.dir/build.make include/tinygltf/CMakeFiles/tinygltf.dir/depend
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/tinygltf.dir/build.make include/tinygltf/CMakeFiles/tinygltf.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mo/jubajam-core/CMakeFiles --progress-num=55,56 "Built target tinygltf"
+.PHONY : include/tinygltf/CMakeFiles/tinygltf.dir/all
+
+# Build rule for subdir invocation for target.
+include/tinygltf/CMakeFiles/tinygltf.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 include/tinygltf/CMakeFiles/tinygltf.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mo/jubajam-core/CMakeFiles 0
+.PHONY : include/tinygltf/CMakeFiles/tinygltf.dir/rule
+
+# Convenience name for target.
+tinygltf: include/tinygltf/CMakeFiles/tinygltf.dir/rule
+.PHONY : tinygltf
+
+# clean rule for target.
+include/tinygltf/CMakeFiles/tinygltf.dir/clean:
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/tinygltf.dir/build.make include/tinygltf/CMakeFiles/tinygltf.dir/clean
+.PHONY : include/tinygltf/CMakeFiles/tinygltf.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

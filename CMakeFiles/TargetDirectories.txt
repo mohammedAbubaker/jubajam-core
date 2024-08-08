@@ -52,3 +52,11 @@
 /home/mo/jubajam-core/deps/json/CMakeFiles/install.dir
 /home/mo/jubajam-core/deps/json/CMakeFiles/install/local.dir
 /home/mo/jubajam-core/deps/json/CMakeFiles/install/strip.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/loader_example.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/tinygltf.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/edit_cache.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/rebuild_cache.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/list_install_components.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/install.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/install/local.dir
+/home/mo/jubajam-core/include/tinygltf/CMakeFiles/install/strip.dir

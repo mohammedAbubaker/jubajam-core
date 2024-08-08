@@ -1,24 +1,37 @@
 #include <iostream>
 
 #include "parser.h"
-#include <fstream>
-#include <sstream>
-#include <nlohmann/json.hpp>
-
-std::string read_model(std::string file_path)
-{
-    std::ifstream file(file_path.c_str());
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_NOEXCEPTION
+#define JSON_NOEXCEPTION
+#define TINYGLTF_NO_STB_IMAGE
+#include "tinygltf/tiny_gltf.h"
 
 std::vector<BasicModelData> ParseModel::parse_model(std::string path) 
 {
-    nlohmann::json model = nlohmann::json::parse(read_model(path));
-    for (auto it : model.items()) 
+    tinygltf::TinyGLTF loader;
+    tinygltf::Model model;
+    std::string err;
+    std::string warn;
+    bool res = loader.LoadASCIIFromFile(&model, &err, &warn, path.c_str());
+    if (!warn.empty()) 
     {
-        std::cout << "type: " << it.value().type_name() << std::endl;
+        std::cout << "Warning: " << warn << std::endl;
+    }
+
+    if (!err.empty()) 
+    {
+        std::cout << "Error: " << err << std::endl;
+    }
+
+    if (!res)
+    {
+        std::cout << "Failed to load GLTF" << std::endl;
+    } else 
+    {
+        std::cout << "Loaded 1 model successfully" << std::endl;
     }
 }
 

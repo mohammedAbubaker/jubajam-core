@@ -239,6 +239,32 @@ glm/fast:
 	$(MAKE) $(MAKESILENT) -f deps/glm/glm/CMakeFiles/glm.dir/build.make deps/glm/glm/CMakeFiles/glm.dir/build
 .PHONY : glm/fast
 
+#=============================================================================
+# Target rules for targets named loader_example
+
+# Build rule for target.
+loader_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 loader_example
+.PHONY : loader_example
+
+# fast build rule for target.
+loader_example/fast:
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/loader_example.dir/build.make include/tinygltf/CMakeFiles/loader_example.dir/build
+.PHONY : loader_example/fast
+
+#=============================================================================
+# Target rules for targets named tinygltf
+
+# Build rule for target.
+tinygltf: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tinygltf
+.PHONY : tinygltf
+
+# fast build rule for target.
+tinygltf/fast:
+	$(MAKE) $(MAKESILENT) -f include/tinygltf/CMakeFiles/tinygltf.dir/build.make include/tinygltf/CMakeFiles/tinygltf.dir/build
+.PHONY : tinygltf/fast
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -305,6 +331,8 @@ help:
 	@echo "... glfw"
 	@echo "... glm"
 	@echo "... jubajam-core"
+	@echo "... loader_example"
+	@echo "... tinygltf"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

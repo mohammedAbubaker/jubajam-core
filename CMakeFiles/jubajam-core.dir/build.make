@@ -111,6 +111,7 @@ jubajam-core: CMakeFiles/jubajam-core.dir/build.make
 jubajam-core: deps/glad/libglad.a
 jubajam-core: deps/glfw-3.4/src/libglfw3.a
 jubajam-core: deps/glm/glm/libglm.a
+jubajam-core: include/tinygltf/libtinygltf.a
 jubajam-core: /usr/lib/librt.a
 jubajam-core: /usr/lib/libm.so
 jubajam-core: CMakeFiles/jubajam-core.dir/link.txt
