@@ -11,6 +11,13 @@
 
 std::vector<BasicModelData> ParseModel::parse_model(std::string path) 
 {
+    /*
+     * The main goal at the moment is to have a function that returns
+     * a list which contains a RenderPart. The RenderPart holds the necessary
+     * texture data and vertex data to render that part. 
+     *
+     * A model would just be a vector of RenderParts.
+     * */
     tinygltf::TinyGLTF loader;
     tinygltf::Model model;
     std::string err;
@@ -29,10 +36,13 @@ std::vector<BasicModelData> ParseModel::parse_model(std::string path)
     if (!res)
     {
         std::cout << "Failed to load GLTF" << std::endl;
-    } else 
+    } 
+    else 
     {
         std::cout << "Loaded 1 model successfully" << std::endl;
     }
+
+    tinygltf::Scene &scene = model.scenes[model.defaultScene];
 }
 
 
