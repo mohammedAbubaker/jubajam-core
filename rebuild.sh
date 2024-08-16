@@ -7,4 +7,5 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=on .
 
 cmake -Bbuild-cmake -H. -GNinja
 cd build-cmake && cmake --build .
+mv compile_commands.json ..
 ./jubajam-core

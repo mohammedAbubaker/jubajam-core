@@ -5,21 +5,14 @@
 // all the info needed for a basic
 // model render
 
-struct TexObject
+struct RenderPart 
 {
-    std::vector<unsigned char> texture_data;
-    int height;
-    int width;
-    int nrChannels;
-};
-
-struct BasicModelData  
-{
-    TexObject texture_object;
-    std::vector<double> vertices;
+    std::string textures;
+    std::vector<float> position_data;
+    std::vector<float> texcoord_data;
 };
 
 struct ParseModel
 {
-    std::vector<BasicModelData> parse_model(std::string path);
+    std::vector<RenderPart> parse_model(std::string path);
 };
