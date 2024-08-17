@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <unordered_map>
@@ -6,6 +5,8 @@
 #include "json.hpp"
 #include "fstream"
 #include "Base64/Base64.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image/stb_image.h"
 
 std::string encode(const std::string &data) {
     auto b64 = macaron::Base64::Encode(data);
@@ -105,20 +106,33 @@ std::vector<RenderPart> ParseModel::parse_model(std::string path)
             std::string data = uri.substr(uri.find(',') + 1, uri.size());
             std::string texture_data;
             decode(data, texture_data);
-            RenderPart resulting_renderpart = RenderPart {
-                .textures = texture_data,
+            
+            unsigned char *image_data =  (unsigned char*) texture_data.c_str();
+            int width, height, channels;
+            unsigned char *image = stbi_load_from_memory(
+                image_data,
+                texture_data.length(),
+                &width, 
+                &height, 
+                &channels, 
+                0
+            );
+
+            std::vector<unsigned char> final_tex(image_data, image_data + (width * height * channels));
+            TextureInfo texture_info = TextureInfo {
+                .texture_data = final_tex,
+                .width = width,
+                .height = height,
+                .channels = channels,
+            };
+
+            RenderPart resulting_renderpart = {
+                .texture_info = texture_info,
                 .position_data = position_substring,
-                .texcoord_data = texcoord_substring,
+                .texcoord_data = texcoord_substring
             };
             result.push_back(resulting_renderpart);
         }
     }
     return result;
-}
-
-
-int main () {
-    ParseModel model_parser;
-    model_parser.parse_model("../assets/Monster.gltf");
-    return 0;
 }

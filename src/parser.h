@@ -5,9 +5,17 @@
 // all the info needed for a basic
 // model render
 
+struct TextureInfo
+{
+    std::vector<unsigned char> texture_data;
+    int width;
+    int height;
+    int channels;
+};
+
 struct RenderPart 
 {
-    std::string textures;
+    TextureInfo texture_info;
     std::vector<float> position_data;
     std::vector<float> texcoord_data;
 };

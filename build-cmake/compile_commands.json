@@ -13,163 +13,163 @@
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -I/home/algiers/jubajam-core/deps/glad/include -o deps/glad/CMakeFiles/glad.dir/src/glad.c.o -c /home/algiers/jubajam-core/deps/glad/src/glad.c",
+  "command": "/usr/lib64/ccache/cc -I/home/algiers/jubajam-core/deps/glad/include -o deps/glad/CMakeFiles/glad.dir/src/glad.c.o -c /home/algiers/jubajam-core/deps/glad/src/glad.c",
   "file": "/home/algiers/jubajam-core/deps/glad/src/glad.c",
   "output": "deps/glad/CMakeFiles/glad.dir/src/glad.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/context.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/context.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/context.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/context.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/init.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/init.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/init.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/input.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/input.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/input.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/input.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/input.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/input.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/monitor.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/monitor.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/monitor.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/monitor.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/platform.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/platform.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/platform.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/platform.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/platform.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/platform.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/vulkan.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/vulkan.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/vulkan.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/vulkan.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/vulkan.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/vulkan.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/window.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/window.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/window.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/window.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/egl_context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/egl_context.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/egl_context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/egl_context.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/egl_context.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/egl_context.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/osmesa_context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/osmesa_context.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/osmesa_context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/osmesa_context.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/osmesa_context.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/osmesa_context.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_init.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_init.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/null_init.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_init.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_monitor.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_monitor.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/null_monitor.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_monitor.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_window.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_window.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/null_window.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_window.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_joystick.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_joystick.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_joystick.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/null_joystick.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/null_joystick.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_joystick.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_module.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_module.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_module.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_module.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/posix_module.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_module.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_time.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_time.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_time.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_time.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/posix_time.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_time.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_thread.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_thread.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_thread.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_thread.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/posix_thread.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_thread.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_init.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_init.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/x11_init.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_init.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_monitor.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_monitor.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/x11_monitor.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_monitor.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_window.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_window.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/x11_window.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_window.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/xkb_unicode.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/xkb_unicode.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/xkb_unicode.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/xkb_unicode.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/xkb_unicode.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/xkb_unicode.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/glx_context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/glx_context.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/glx_context.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/glx_context.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/glx_context.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/glx_context.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_init.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_init.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_init.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/wl_init.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_init.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_monitor.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_monitor.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_monitor.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/wl_monitor.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_monitor.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_window.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_window.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/wl_window.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/linux_joystick.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/linux_joystick.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/linux_joystick.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/linux_joystick.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/linux_joystick.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/linux_joystick.c.o"
 },
 {
   "directory": "/home/algiers/jubajam-core/build-cmake",
-  "command": "/usr/bin/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_poll.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_poll.c",
+  "command": "/usr/lib64/ccache/cc -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11 -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src -std=c99 -fPIC -Wall -o deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_poll.c.o -c /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_poll.c",
   "file": "/home/algiers/jubajam-core/deps/glfw-3.4/src/posix_poll.c",
   "output": "deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_poll.c.o"
 },
