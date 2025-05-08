@@ -1,3 +1,6 @@
+
+#include <atomic>
+
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/trigonometric.hpp"
@@ -24,6 +27,8 @@
 
 #include <vector>
 #include "parser.h"
+
+#include <thread>
 
 std::string read_file(std::string file_path)
 {
@@ -245,6 +250,29 @@ struct Face {
     FaceElement face_element_2;
 };
 
+void render() {
+    glBindVertexArray(m_VAO);
+
+    for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
+        const unsigned int MaterialIndex = m_Entries[i].MaterialIndex;
+
+        assert(MaterialIndex < m_Textures.size());
+
+        if (m_Textures[MaterialIndex]) {
+            m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
+        }
+
+        glDrawElementsBaseVertex(GL_TRIANGLES,
+                                  m_Entries[i].NumIndices,
+                                  GL_UNSIGNED_INT,
+                                  (void*)(sizeof(unsigned int) * m_Entries[i].BaseIndex),
+                                  m_Entries[i].BaseVertex);
+    }
+
+    // Make sure the VAO is not changed from the outside
+    glBindVertexArray(0);
+}
+
 std::unordered_map<std::string, std::vector<GLuint>> initialise_mesh(std::string path) {
     std::unordered_map<std::string, std::vector<GLuint>> result;
     ParseModel parse_model;
@@ -259,7 +287,7 @@ std::unordered_map<std::string, std::vector<GLuint>> initialise_mesh(std::string
         std::vector<float> vertex_data;
         int i = 0;
         int j = 0;
-        while ((i + j) < (render_part.position_data.size() + render_part.texcoord_data.size())) {
+        while ((i < render_part.position_data.size()) && (j < render_part.texcoord_data.size())) {
             vertex_data.push_back(render_part.position_data.at(i));
             vertex_data.push_back(render_part.position_data.at(i+1));
             vertex_data.push_back(render_part.position_data.at(i+2));
@@ -269,7 +297,11 @@ std::unordered_map<std::string, std::vector<GLuint>> initialise_mesh(std::string
 
             i += 3;
             j += 2;
+
         }
+
+        std::cout << i << std::endl;
+        std::cout << j << std::endl;
 
         // Set the vertex data
         GLuint vbo;
@@ -313,49 +345,107 @@ std::unordered_map<std::string, std::vector<GLuint>> initialise_mesh(std::string
         );
         glTexParameteri(
                 GL_TEXTURE_2D, 
+
                 GL_TEXTURE_MAG_FILTER, 
                 GL_LINEAR
         );
 
         result["sizes"].push_back(render_part.position_data.size());
+        result["vbo"].push_back(vbo);
+        result["txo"].push_back(txo);
     }
     return result;
 }
 
+struct GameState 
+{
+    std::vector<std::string> gltf_path;
+
+    std::vector<float> health;
+    std::vector<glm::vec3> pos;
+    std::vector<float> strength_modifier;
+    std::vector<bool> is_player;
+};
+
+GameState initialise_game_state() 
+{
+    std::vector<std::string> gltf_path = {"p1.gltf", "", "p2.gltf"};
+    std::vector<float> health = {1.0, 12, 1.0};
+    std::vector<glm::vec3> pos = {glm::vec3(0.1, 0.4, 0.1), glm::vec3(), glm::vec3(glm::vec3(0.1, 0.4, 0.3))};
+    std::vector<float> strength_modifier = {1.0, 0.0, 3.0};
+    std::vector<bool> is_player = {true, false, false};
+
+    return 
+    {
+        .gltf_path = gltf_path,
+        .health = health,
+        .pos = pos,
+        .strength_modifier = strength_modifier,
+        .is_player = is_player
+    };
+}
+
+void render_thread()
+{
+    int max_fps = 300;
+    while () 
+    {
+        // Read from the whatever.
+        // Wait for a bit
+    }
+}
+
+void game_thread()
+{
+    std::thread render(render_thread);
+    render.join();
+}
+
+void input_thread() 
+{
+    std::thread game(game_thread);
+    game.join();
+}
+
 int main()
 {
+    std::thread input(input_thread);
+    input.join();
+    return 1;
+
     RenderContext render_context;
     if (!render_context.make_window(1024, 768, "Hello World")) {
         return -1;
-    }
+    } 
     // Load vertex shader
     std::string vertex_shader_code
         = read_file("../src/vertex.glsl");
     std::string fragment_shader_code = read_file("../src/fragment.glsl");
     render_context.load_shaders(vertex_shader_code, fragment_shader_code);
-    glm::vec3 pos = glm::vec3(0.f, 20.f, -100.f);
+    glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
     float viewing_angle = 90.f;
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_ALWAYS);
-    std::unordered_map<std::string, std::vector<GLuint>> bindings = initialise_mesh("../assets/Monster.gltf");
+    // std::unordered_map<std::string, std::vector<GLuint>> bindings = initialise_mesh("../assets/Monster.gltf");
+    std::vector<Mesh> meshes = RenderEngine.get_meshes("")
     while (!glfwWindowShouldClose(render_context.window)) {
         // render_context.load_mvp(pos, glm::radians(viewing_angle));
         // render_context.rotate_model(current_angle);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // glBindTexture(GL_TEXTURE_2D, txos.at(0));
         for (int i = 0; i < bindings["vbo"].size(); i++) {
-            glBindBuffer(GL_ARRAY_BUFFER, bindings["vbos"].at(i));
-            glBindTexture(GL_TEXTURE_2D, bindings["txos"].at(i));
+            glBindBuffer(GL_ARRAY_BUFFER, bindings["vbo"].at(i));
+            glBindTexture(GL_TEXTURE_2D, bindings["txo"].at(i));
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
+            // glEnableVertexAttribArray(0);
+            // glEnableVertexAttribArray(1);
 
-            glDrawArrays(GL_TRIANGLES, 0, bindings["sizes"].at(i) / 3);
-            glDisableVertexAttribArray(0);
-            glDisableVertexAttribArray(1);
+            glDrawArrays(GL_TRIANGLES, 0, bindings["vbo"].size());
+            // glDisableVertexAttribArray(0);
+            // glDisableVertexAttribArray(1);
         }
         // glBindVertexArray(vao);
         // // glDrawArrays(GL_TRIANGLES, 0, sum_of_vertices / 3);
