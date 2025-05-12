@@ -1,15 +1,19 @@
-
-#include <atomic>
-
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/ext/vector_bool2_precision.hpp"
 #include "glm/trigonometric.hpp"
 #include <cstdio>
 #include <filesystem>
 #include <glad/glad.h>
 
+#include <tinygltf/tiny_gltf.h>
+
 #include <GLFW/glfw3.h>
 #include <fstream>
+#include <mutex>
+#include <queue>
+#include <stop_token>
+#include <thread>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
@@ -26,9 +30,8 @@
 #include <cstdlib>
 
 #include <vector>
-#include "parser.h"
-
-#include <thread>
+#include <cameron314/atomicops.h>
+#include <cameron314/readerwriterqueue.h>
 
 std::string read_file(std::string file_path)
 {
@@ -62,6 +65,7 @@ std::vector<std::string> split_string_by_delimiter(std::string delimiter, std::s
     return result;
 }
 
+// ------------------------------------------------------------------ //
 
 struct RenderContext {
     GLuint program_id;
@@ -135,14 +139,14 @@ struct RenderContext {
         this->matrix_id = glGetUniformLocation(this->program_id, "MVP");
     }
 
-    void rotate_model(double angle) {
+    void rotate_model(double angle)
+    {
         std::chrono::milliseconds ms = duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        );
+            std::chrono::system_clock::now().time_since_epoch());
         float current_ms = (ms.count() % 60);
         std::cout << current_ms << std::endl;
-        
-        // take 5 seconds to do 1 360... 
+
+        // take 5 seconds to do 1 360...
         angle += (current_ms * 3);
         if (angle >= 360.0) {
             angle = 0.0;
@@ -152,10 +156,9 @@ struct RenderContext {
         double angle_radians = glm::radians(angle);
         angle_radians = 0;
         glm::mat4 rot = glm::mat3(
-            std::cos(angle_radians),    0,  std::sin(angle_radians),
-            0,                          1,  0,
-            -std::sin(angle_radians),   0,  std::cos(angle_radians)
-        );
+            std::cos(angle_radians), 0, std::sin(angle_radians),
+            0, 1, 0,
+            -std::sin(angle_radians), 0, std::cos(angle_radians));
         this->rot = rot;
         this->rot_id = glGetUniformLocation(this->program_id, "ROT");
     }
@@ -164,7 +167,6 @@ struct RenderContext {
     {
         glUniformMatrix3fv(this->rot_id, 1, GL_FALSE, &this->rot[0][0]);
     }
-
 
     void apply_mvp()
     {
@@ -216,7 +218,8 @@ struct RenderContext {
         // Check the program
         glGetProgramiv(this->program_id, GL_LINK_STATUS, &result);
         glGetProgramiv(this->program_id, GL_INFO_LOG_LENGTH, &info_log_length);
-        if (info_log_length > 0) {
+        if (info_log_length > 0) 
+        {
             std::vector<char> program_error_message(info_log_length + 1);
             glGetProgramInfoLog(this->program_id, info_log_length, NULL, &program_error_message[0]);
             std::printf("%s\n", &program_error_message[0]);
@@ -238,249 +241,473 @@ struct RenderContext {
     }
 };
 
-struct FaceElement {
-    glm::vec3 vertex;
-    glm::vec3 normal;
-    glm::vec2 texture;
+std::mutex game_state_mutex;
+std::mutex key_map_mutex;
+std::hash<std::string> hasher;
+
+enum Entity
+{
+    PLAYER_ID,
+    ARENA_ID,
+    HEALTHBAR_ID,
+    AI_ID
 };
 
-struct Face {
-    FaceElement face_element_0;
-    FaceElement face_element_1;
-    FaceElement face_element_2;
+
+struct Mobs
+{
+    std::vector<Entity> v_id;
+    std::vector<float> v_health;
+    std::vector<glm::vec3> v_pos;
+    std::vector<std::string> v_repr;
+    std::vector<float> strength_modifier;
 };
 
-void render() {
-    glBindVertexArray(m_VAO);
+struct Scenes
+{
+    std::vector<Entity> v_id;
+    std::vector<glm::vec3> v_pos;
+};
 
-    for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
-        const unsigned int MaterialIndex = m_Entries[i].MaterialIndex;
 
-        assert(MaterialIndex < m_Textures.size());
+// User Interface Element(s)
+struct UIEs
+{
+    std::vector<Entity> v_id;
+    std::vector<std::string> v_repr;
+};
 
-        if (m_Textures[MaterialIndex]) {
-            m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
-        }
+struct GameState 
+{
+    Mobs mobs;
+    Scenes scenes;
+    UIEs ui;
+};
 
-        glDrawElementsBaseVertex(GL_TRIANGLES,
-                                  m_Entries[i].NumIndices,
-                                  GL_UNSIGNED_INT,
-                                  (void*)(sizeof(unsigned int) * m_Entries[i].BaseIndex),
-                                  m_Entries[i].BaseVertex);
-    }
+struct KeyState 
+{
+    bool W;
+    bool A;
+    bool S;
+    bool D;
+    bool LEFT;
+    bool RIGHT;
+};
 
-    // Make sure the VAO is not changed from the outside
-    glBindVertexArray(0);
+GameState initialise_game_state()
+{
+    Mobs mobs
+    (
+        {PLAYER_ID, AI_ID}, // v_id
+        {0.0, 0.0}, // v_health;
+        {glm::vec3(0.0, 0.0, 1.0), glm::vec3(1.0, 1.0, 0.0)}, // v_pos;
+        {"player.gltf", "ai.gltf"}, // v_repr;
+        {1.0, 1.0}  // strength_modifier;
+    );
+
+    Scenes scenes
+    (
+        {ARENA_ID}, // v_id
+        {glm::vec3(0.0,0.0,0.0)} // v_pos
+    );
+
+    UIEs uies
+    (
+        {HEALTHBAR_ID}, // v_id
+        {"healthbar.gltf"} // v_repr
+    );
+
+    return GameState
+    (
+        mobs,
+        scenes,
+        uies
+    );
+
 }
+KeyState initialise_key_state()
+{
+    return 
+    {
+        false,
+        false,
+        false,
+        false
+    };
+};
 
-std::unordered_map<std::string, std::vector<GLuint>> initialise_mesh(std::string path) {
-    std::unordered_map<std::string, std::vector<GLuint>> result;
-    ParseModel parse_model;
+GameState game_state = initialise_game_state();
+std::map<std::atomic<int>, std::atomic<bool>> key_map;
 
-    result["vbo"] = std::vector<GLuint>();
-    result["txo"] = std::vector<GLuint>();
-    result["sizes"] = std::vector<GLuint>();
+moodycamel::ReaderWriterQueue<int> key_queue(100);
 
-    std::vector<RenderPart> render_parts = parse_model.parse_model(path);
-    for (RenderPart render_part: render_parts) {
-        // Create vertex data
-        std::vector<float> vertex_data;
-        int i = 0;
-        int j = 0;
-        while ((i < render_part.position_data.size()) && (j < render_part.texcoord_data.size())) {
-            vertex_data.push_back(render_part.position_data.at(i));
-            vertex_data.push_back(render_part.position_data.at(i+1));
-            vertex_data.push_back(render_part.position_data.at(i+2));
+struct MeshData
+{
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> uv_coords;
+};
 
-            vertex_data.push_back(render_part.texcoord_data.at(j));
-            vertex_data.push_back(render_part.texcoord_data.at(j+1));
+tinygltf::Model load_gltf(std::string path, tinygltf::TinyGLTF &loader)
+{
+    tinygltf::Model model;
+    std::vector<MeshData> mesh_data;
+    std::string warn;
+    std::string err;
 
-            i += 3;
-            j += 2;
+    loader.LoadASCIIFromFile
+    (
+        &model,
+        &err,
+        &warn,
+        path.c_str()
+    );
 
+    return model;
+};
+
+std::vector<MeshData> load_mesh_data(const std::vector<std::string> &reprs)
+{
+    std::vector<MeshData> result;
+    tinygltf::TinyGLTF loader;
+    for (std::string repr : reprs)
+    {
+        tinygltf::Model model = load_gltf(repr, loader);
+        for (size_t i = 0; i < model.bufferViews.size(); i++)
+        {
+            tinygltf::BufferView buffer_view = model.bufferViews[i];
+            if (buffer_view.target == 0) continue;
+            tinygltf::Buffer buffer = model.buffers[buffer_view.buffer];
+            std::cout << buffer.name << std::endl;
         }
-
-        std::cout << i << std::endl;
-        std::cout << j << std::endl;
-
-        // Set the vertex data
-        GLuint vbo;
-        GLuint txo;
-
-        glCreateBuffers(1, &vbo);
-        glNamedBufferStorage(
-                vbo,
-                vertex_data.size() * sizeof(float),
-                &vertex_data[0],
-                GL_DYNAMIC_STORAGE_BIT
-        );
-
-        glGenTextures(1, &txo);
-        glBindTexture(GL_TEXTURE_2D, txo);
-        glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RGB,
-                render_part.texture_info.width,
-                render_part.texture_info.height,
-                0,
-                GL_RGB,
-                GL_UNSIGNED_BYTE,
-                &render_part.texture_info.texture_data[0]
-        );
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(
-                GL_TEXTURE_2D,
-                GL_TEXTURE_WRAP_S, GL_REPEAT
-        );
-        glTexParameteri(
-                GL_TEXTURE_2D, 
-                GL_TEXTURE_WRAP_T, 
-                GL_REPEAT
-        );
-        glTexParameteri(
-                GL_TEXTURE_2D, 
-                GL_TEXTURE_MIN_FILTER, 
-                GL_LINEAR_MIPMAP_LINEAR
-        );
-        glTexParameteri(
-                GL_TEXTURE_2D, 
-
-                GL_TEXTURE_MAG_FILTER, 
-                GL_LINEAR
-        );
-
-        result["sizes"].push_back(render_part.position_data.size());
-        result["vbo"].push_back(vbo);
-        result["txo"].push_back(txo);
     }
     return result;
 }
 
-struct GameState 
+struct MaterialData
 {
-    std::vector<std::string> gltf_path;
-
-    std::vector<float> health;
-    std::vector<glm::vec3> pos;
-    std::vector<float> strength_modifier;
-    std::vector<bool> is_player;
 };
 
-GameState initialise_game_state() 
+void allocate_memory()
 {
-    std::vector<std::string> gltf_path = {"p1.gltf", "", "p2.gltf"};
-    std::vector<float> health = {1.0, 12, 1.0};
-    std::vector<glm::vec3> pos = {glm::vec3(0.1, 0.4, 0.1), glm::vec3(), glm::vec3(glm::vec3(0.1, 0.4, 0.3))};
-    std::vector<float> strength_modifier = {1.0, 0.0, 3.0};
-    std::vector<bool> is_player = {true, false, false};
+    // Returns memory description of the GPU:
+    // vertices region:
+    // texture region:
+    // uv coord region:
+    // norm region:
+    // animation region:
+};
 
-    return 
+enum ARRAYS
+{
+    VERTICES,
+    INDICES,
+    TEXTURES,
+};
+
+
+GLuint add_shader(std::string shader_path, GLuint type)
+{
+    GLuint shader_id;
+    int success;
+    char info_log[512];
+
+    std::string source = read_file(shader_path);
+    const char *source_pointer =source.c_str();
+    shader_id = glCreateShader(type);
+    glShaderSource(shader_id, 1, &source_pointer, NULL);
+    glCompileShader(shader_id);
+    glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
+    if (!success)
     {
-        .gltf_path = gltf_path,
-        .health = health,
-        .pos = pos,
-        .strength_modifier = strength_modifier,
-        .is_player = is_player
-    };
+        glGetShaderInfoLog(shader_id, 512, NULL, info_log);
+        std::cout << "ERROR: " << info_log << std::endl;
+    }
+    else
+    {
+        std::cout << "Successfully added: " << shader_path << std::endl;
+    }
+
+    return shader_id;
 }
 
-void render_thread()
+struct RenderData
 {
-    int max_fps = 300;
-    while () 
+    GLuint vao = 0;
+    GLuint vertex_vbo = 0;
+    GLuint colour_vbo = 0;
+    GLuint index_ebo = 0;
+    size_t index_count = 0;
+};
+
+std::vector<RenderData> initialise_render()
+{
+    RenderData render_data;
+    std::vector<glm::vec3>  vertices = 
     {
-        // Read from the whatever.
-        // Wait for a bit
+        glm::vec3(-0.5,-0.5,1.1), 
+        glm::vec3(0.5,-0.5,0.0), 
+        glm::vec3(0.0,0.5,0.0)
+    };
+
+    std::vector<glm::vec4> colours = 
+    {
+        glm::vec4(1.0,0.0,0.0, 1.0), 
+        glm::vec4(1.0,0.0,0.0, 1.0), 
+        glm::vec4(1.0,0.0,0.0, 1.0)
+    };
+
+    std::vector<unsigned int> indices = {0, 1, 2};
+    render_data.index_count = indices.size();
+
+    glCreateBuffers(1, &render_data.vertex_vbo);
+    glNamedBufferData(
+        render_data.vertex_vbo, 
+        vertices.size() * sizeof(glm::vec3), 
+        vertices.data(), 
+        GL_DYNAMIC_DRAW
+    );
+
+    glCreateBuffers(1, &render_data.colour_vbo);
+    glNamedBufferData(
+        render_data.colour_vbo, 
+        colours.size() * sizeof(glm::vec4), 
+        colours.data(), 
+        GL_DYNAMIC_DRAW
+    );
+
+    glCreateBuffers(1, &render_data.index_ebo);
+    glNamedBufferData(
+        render_data.index_ebo,
+        indices.size() * sizeof(unsigned int),
+        indices.data(),
+        GL_DYNAMIC_DRAW
+    );
+
+    glVertexArrayVertexBuffer(
+        render_data.vao,
+        0,
+        render_data.vertex_vbo,
+        0,
+        sizeof(glm::vec3)
+    );
+    glEnableVertexArrayAttrib(
+        render_data.vao,
+        0
+    );
+    glVertexArrayAttribFormat(
+        render_data.vao,
+        0,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        0
+    );
+    glVertexArrayAttribBinding(
+        render_data.vao,
+        0, 
+        0
+    );
+
+    glVertexArrayVertexBuffer(
+        render_data.vao,
+        1,
+        render_data.colour_vbo,
+        0,
+        sizeof(glm::vec4)
+    );
+    glEnableVertexArrayAttrib(
+        render_data.vao,
+        1
+    );
+    glVertexArrayAttribFormat(
+        render_data.vao,
+        1,
+        4,
+        GL_FLOAT,
+        GL_FALSE,
+        0
+    );
+    glVertexArrayAttribBinding(
+        render_data.vao,
+        1,
+        1
+    );
+
+    glVertexArrayElementBuffer(
+        render_data.vao,
+        render_data.index_ebo
+    );
+
+    return {render_data};
+}
+
+GLuint create_program(std::vector<GLuint> shaders)
+{
+    int success;
+    GLuint program;
+    char info_log[512];
+
+    program = glCreateProgram();
+    for (GLuint shader: shaders)
+    {
+        glAttachShader(program, shader);
+    }
+    glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(program, 512, NULL, info_log);
+        std::cout << "Error: " << info_log << std::endl;
+    }
+    else
+    {
+        std::cout << "Successfully compiled program id " << program << std::endl;
+    }
+
+    for (GLuint shader: shaders)
+    {
+        glDeleteShader(shader);
+    }
+
+    return program;
+}
+
+void draw(std::vector<RenderData> render_data)
+{
+    for (RenderData render_datum: render_data)
+    {
+        glBindVertexArray(render_datum.vao);
+        glDrawElements(
+            GL_TRIANGLES, 
+            render_datum.index_count,
+            GL_UNSIGNED_INT,
+            nullptr
+        );
     }
 }
 
-void game_thread()
+
+
+void render(std::stop_token stop_token)
 {
-    std::thread render(render_thread);
-    render.join();
+    std::vector<GLuint> shaders = 
+    {
+        add_shader("vert.glsl", GL_VERTEX_SHADER), 
+        add_shader("frag.glsl", GL_FRAGMENT_SHADER)
+    };
+
+    GLuint program = create_program(shaders);
+
+    std::vector<RenderData> render_data = initialise_render();
+    int wait_ms = 16;
+    while (!stop_token.stop_requested()) 
+    {
+        glUseProgram(program);
+        draw(render_data);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
+    }
 }
 
-void input_thread() 
+void translate_player(GameState &game_state, glm::vec3 vector)
 {
-    std::thread game(game_thread);
-    game.join();
+    int index = 0;
+    for (Entity entity_id : game_state.mobs.v_id)
+    {
+        if (entity_id == PLAYER_ID)
+        {
+            game_state.mobs.v_pos[index] += vector;
+        }
+    }
+    index += 1;
+}
+
+void game(std::stop_token stop_token)
+{
+    std::jthread render_thread(render);
+    int wait_ms = 1;
+
+    std::map<int, bool> key_map;
+
+    while (!stop_token.stop_requested()) 
+    {
+        int key;
+        if (key_queue.try_dequeue(key))
+        {
+            if (key == GLFW_KEY_W) key_map[GLFW_KEY_W] = true;
+            if (key == GLFW_KEY_A) key_map[GLFW_KEY_A] = true;
+            if (key == GLFW_KEY_S) key_map[GLFW_KEY_S] = true;
+            if (key == GLFW_KEY_D) key_map[GLFW_KEY_D] = true;
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
+        {
+            std::lock_guard<std::mutex> lock(game_state_mutex);
+            if (key_map[GLFW_KEY_W]) translate_player(game_state, glm::vec3(0,0,1));
+            if (key_map[GLFW_KEY_A]) translate_player(game_state, glm::vec3(0,1,0));
+        }
+
+        // Reset key map
+        key_map.clear();
+    }
 }
 
 int main()
 {
-    std::thread input(input_thread);
-    input.join();
-    return 1;
 
-    RenderContext render_context;
-    if (!render_context.make_window(1024, 768, "Hello World")) {
-        return -1;
-    } 
-    // Load vertex shader
-    std::string vertex_shader_code
-        = read_file("../src/vertex.glsl");
-    std::string fragment_shader_code = read_file("../src/fragment.glsl");
-    render_context.load_shaders(vertex_shader_code, fragment_shader_code);
-    glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
-    float viewing_angle = 90.f;
+    if (!glfwInit()) {
+        std::fprintf(stderr, "GLFW: Error initialising glfwInit\n");
+        return 1;
+    }
+
+    int width = 1024;
+    int height = 768;
+    std::string window_name = "goodbye";
+    auto window = glfwCreateWindow(width, height, window_name.c_str(), NULL, NULL);
+
+    if (window == NULL) 
+    {
+        std::fprintf(stderr, "GLFW: Failed to create a window\n");
+        glfwTerminate();
+        return 1;
+    }
+
+    glfwMakeContextCurrent(window);
+    std::fprintf(stderr, "GLFW: Window creation successful\n");
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return 1;
+    }
+
+    // std::jthread game_thread(game);
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_ALWAYS);
-    // std::unordered_map<std::string, std::vector<GLuint>> bindings = initialise_mesh("../assets/Monster.gltf");
-    std::vector<Mesh> meshes = RenderEngine.get_meshes("")
-    while (!glfwWindowShouldClose(render_context.window)) {
-        // render_context.load_mvp(pos, glm::radians(viewing_angle));
-        // render_context.rotate_model(current_angle);
-        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // glBindTexture(GL_TEXTURE_2D, txos.at(0));
-        for (int i = 0; i < bindings["vbo"].size(); i++) {
-            glBindBuffer(GL_ARRAY_BUFFER, bindings["vbo"].at(i));
-            glBindTexture(GL_TEXTURE_2D, bindings["txo"].at(i));
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-            // glEnableVertexAttribArray(0);
-            // glEnableVertexAttribArray(1);
+    int wait_ms = 3;
+    
+    std::vector<GLuint> shaders = 
+    {
+        add_shader("vert.glsl", GL_VERTEX_SHADER), 
+        add_shader("frag.glsl", GL_FRAGMENT_SHADER)
+    };
 
-            glDrawArrays(GL_TRIANGLES, 0, bindings["vbo"].size());
-            // glDisableVertexAttribArray(0);
-            // glDisableVertexAttribArray(1);
-        }
-        // glBindVertexArray(vao);
-        // // glDrawArrays(GL_TRIANGLES, 0, sum_of_vertices / 3);
-        int state = glfwGetKey(render_context.window, GLFW_KEY_W);
-        if (state == GLFW_PRESS) {
-            pos += glm::vec3(0.1f, 0.0f, 50.0f);
-        }
+    GLuint program = create_program(shaders);
+    std::vector<RenderData> render_data = initialise_render();
 
-        state = glfwGetKey(render_context.window, GLFW_KEY_S);
-        if (state == GLFW_PRESS) {
-            pos -= glm::vec3(0.1f, 0.0f, 0.0f);
-        }
-
-        state = glfwGetKey(render_context.window, GLFW_KEY_D);
-        if (state == GLFW_PRESS) {
-            pos += glm::vec3(0.0f, 0.0f, 0.1f);
-        }
-
-        state = glfwGetKey(render_context.window, GLFW_KEY_A);
-        if (state == GLFW_PRESS) {
-            pos -= glm::vec3(0.0f, 0.0f, 0.1f);
-        }
-
-        state = glfwGetKey(render_context.window, GLFW_KEY_LEFT);
-        if (state == GLFW_PRESS) {
-            viewing_angle -= 2.f;
-        }
-
-        state = glfwGetKey(render_context.window, GLFW_KEY_RIGHT);
-        if (state == GLFW_PRESS) {
-            viewing_angle += 2.f;
-        }
-        render_context.apply_mvp();
-        render_context.apply_rot();
-        render_context.update_screen();
+    while (!glfwWindowShouldClose(window)) 
+    {
+        glfwPollEvents();
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) key_queue.try_enqueue(GLFW_KEY_W);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) key_queue.try_enqueue(GLFW_KEY_A);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) key_queue.try_enqueue(GLFW_KEY_S);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) key_queue.try_enqueue(GLFW_KEY_D);
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) break;
+        draw(render_data);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
+        glfwSwapBuffers(window);
     }
     return 0;
 }
