@@ -445,16 +445,16 @@ std::vector<RenderData> initialise_render()
     RenderData render_data;
     std::vector<glm::vec3>  vertices = 
     {
-        glm::vec3(-0.5,-0.5,1.1), 
-        glm::vec3(0.5,-0.5,0.0), 
-        glm::vec3(0.0,0.5,0.0)
+        glm::vec3(0.0,0.5,0.0), 
+        glm::vec3(0.5,0.0,0.0), 
+        glm::vec3(-0.5,0.0,0.0)
     };
 
     std::vector<glm::vec4> colours = 
     {
         glm::vec4(1.0,0.0,0.0, 1.0), 
-        glm::vec4(1.0,0.0,0.0, 1.0), 
-        glm::vec4(1.0,0.0,0.0, 1.0)
+        glm::vec4(0.0,1.0,0.0, 1.0), 
+        glm::vec4(0.0,0.0,1.0, 1.0)
     };
 
     std::vector<unsigned int> indices = {0, 1, 2};
@@ -699,6 +699,7 @@ int main()
 
     while (!glfwWindowShouldClose(window)) 
     {
+        glUseProgram(program);
         glfwPollEvents();
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) key_queue.try_enqueue(GLFW_KEY_W);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) key_queue.try_enqueue(GLFW_KEY_A);
