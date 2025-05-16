@@ -2,7 +2,10 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/vector_bool2_precision.hpp"
 #include "glm/trigonometric.hpp"
+#include "nlohmann/detail/iterators/primitive_iterator.hpp"
+#include <algorithm>
 #include <cstdio>
+#include <cstring>
 #include <filesystem>
 #include <glad/glad.h>
 
@@ -64,6 +67,182 @@ std::vector<std::string> split_string_by_delimiter(std::string delimiter, std::s
 
     return result;
 }
+
+// ------------------------------------------------------------------ //
+
+struct RenderContext {
+    GLuint program_id;
+
+    GLuint matrix_id;
+
+    glm::mat4 mvp;
+
+    GLFWwindow* window;
+
+    glm::mat3 rot;
+
+    GLuint rot_id;
+
+    /*
+     * Makes a window and returns its success.
+     *
+     * @param width : Width of the window in pixels.
+     * @param height : Height of the window in pixels.
+     * @param name : Name of the window.
+     *
+     * @return : True -> Window created successfull.
+     * @return : False -> No window created due to error.
+     * */
+
+    bool make_window(int width, int height, std::string name)
+    {
+        if (!glfwInit()) {
+            std::fprintf(stderr, "GLFW: Error initialising glfwInit\n");
+            return false;
+        }
+
+        this->window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
+
+        if (window == NULL) {
+            std::fprintf(stderr, "GLFW: Failed to create a window\n");
+            glfwTerminate();
+            return false;
+        }
+
+        glfwMakeContextCurrent(this->window);
+        std::fprintf(stderr, "GLFW: Window creation successful\n");
+
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+            std::cout << "Failed to initialize GLAD" << std::endl;
+            return -1;
+        }
+
+        return true;
+    }
+
+    void load_mvp(glm::vec3 pos, float viewing_angle)
+    {
+        // Projection matrix
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1024 / (float)768, 0.1f, 100.0f);
+
+        // Camera matrix
+        glm::vec3 unit_vector = glm::vec3(cos(viewing_angle), 0.0f, sin(viewing_angle));
+        glm::mat4 view
+            = glm::lookAt(pos, pos + unit_vector, glm::vec3(0, 1, 0));
+
+        // Model matrix (identity for now, but will be different for each model)
+        glm::mat4 model = glm::mat4(1.0f);
+
+        // Model view projection matrix
+        glm::mat4 mvp = projection * view * model;
+
+        // set the mvp
+        this->mvp = mvp;
+        // Get a handle for the matrix
+        this->matrix_id = glGetUniformLocation(this->program_id, "MVP");
+    }
+
+    void rotate_model(double angle)
+    {
+        std::chrono::milliseconds ms = duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch());
+        float current_ms = (ms.count() % 60);
+        std::cout << current_ms << std::endl;
+
+        // take 5 seconds to do 1 360...
+        angle += (current_ms * 3);
+        if (angle >= 360.0) {
+            angle = 0.0;
+        }
+
+        // convert to radians
+        double angle_radians = glm::radians(angle);
+        angle_radians = 0;
+        glm::mat4 rot = glm::mat3(
+            std::cos(angle_radians), 0, std::sin(angle_radians),
+            0, 1, 0,
+            -std::sin(angle_radians), 0, std::cos(angle_radians));
+        this->rot = rot;
+        this->rot_id = glGetUniformLocation(this->program_id, "ROT");
+    }
+
+    void apply_rot()
+    {
+        glUniformMatrix3fv(this->rot_id, 1, GL_FALSE, &this->rot[0][0]);
+    }
+
+    void apply_mvp()
+    {
+        // std::cout << glm::to_string(this->mvp) << std::endl;
+        glUniformMatrix4fv(this->matrix_id, 1, GL_FALSE, &this->mvp[0][0]);
+    }
+
+    void load_shaders(std::string vertex_shader_code, std::string fragment_shader_code)
+    {
+        GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+        GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+
+        GLint result = GL_FALSE;
+        GLint info_log_length;
+
+        // Compile the vertex shader
+        std::cout << "Compiling vertex shader" << std::endl;
+        char const* vertex_source_pointer = vertex_shader_code.c_str();
+        glShaderSource(vertex_shader_id, 1, &vertex_source_pointer, NULL);
+        glCompileShader(vertex_shader_id);
+
+        // Validate vertex shader
+        glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &result);
+        glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
+
+        // Compile fragment shader
+        std::cout << "Compiling fragment shader" << std::endl;
+        char const* fragment_source_pointer = fragment_shader_code.c_str();
+        glShaderSource(fragment_shader_id, 1, &fragment_source_pointer, NULL);
+        glCompileShader(fragment_shader_id);
+
+        // Validate fragment shader
+        glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &result);
+        glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
+        if (info_log_length > 0) {
+            std::vector<char> fragment_shader_error_message(info_log_length + 1);
+            glGetShaderInfoLog(
+                fragment_shader_id, info_log_length, NULL, &fragment_shader_error_message[0]);
+            std::printf("%s\n", &fragment_shader_error_message[0]);
+        }
+
+        // Link the program
+        std::cout << "Linking the program" << std::endl;
+        this->program_id = glCreateProgram();
+        glAttachShader(this->program_id, vertex_shader_id);
+        glAttachShader(this->program_id, fragment_shader_id);
+        glLinkProgram(this->program_id);
+
+        // Check the program
+        glGetProgramiv(this->program_id, GL_LINK_STATUS, &result);
+        glGetProgramiv(this->program_id, GL_INFO_LOG_LENGTH, &info_log_length);
+        if (info_log_length > 0) 
+        {
+            std::vector<char> program_error_message(info_log_length + 1);
+            glGetProgramInfoLog(this->program_id, info_log_length, NULL, &program_error_message[0]);
+            std::printf("%s\n", &program_error_message[0]);
+        }
+
+        glDetachShader(this->program_id, vertex_shader_id);
+        glDetachShader(this->program_id, fragment_shader_id);
+
+        glDeleteShader(vertex_shader_id);
+        glDeleteShader(fragment_shader_id);
+
+        glUseProgram(this->program_id);
+    }
+
+    void update_screen()
+    {
+        glfwSwapBuffers(this->window);
+        glfwPollEvents();
+    }
+};
 
 std::mutex game_state_mutex;
 std::mutex key_map_mutex;
@@ -160,16 +339,32 @@ KeyState initialise_key_state()
     };
 };
 
+
 GameState game_state = initialise_game_state();
+
+struct RenderPart
+{
+    std::string entity_id;
+
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uv_coords;
+    std::vector<glm::vec3> normals;
+};
+
+
+
+
 std::map<std::atomic<int>, std::atomic<bool>> key_map;
 
 moodycamel::ReaderWriterQueue<int> key_queue(100);
 
 struct MeshData
 {
-    std::vector<glm::vec3> vertices;
+    std::vector<float> vertices;
+    std::vector<float> colours;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uv_coords;
+    std::vector<unsigned short> indices;
 };
 
 tinygltf::Model load_gltf(std::string path, tinygltf::TinyGLTF &loader)
@@ -187,39 +382,106 @@ tinygltf::Model load_gltf(std::string path, tinygltf::TinyGLTF &loader)
         path.c_str()
     );
 
-    if (err.size()) std::cout << err << std::endl;
-    if (warn.size()) std::cout << warn << std::endl;
-
     return model;
 };
 
-MeshData parse_mesh(tinygltf::Model &model)
+struct Packet
+{
+    size_t byte_start;
+    size_t byte_end;
+    size_t byte_stride;
+    size_t count;
+
+    std::vector<float> default_vector;
+    std::vector<unsigned char> buffer;
+};
+
+MeshData load_mesh(tinygltf::Model &model)
 {
     MeshData mesh_data;
-    std::vector<glm::vec3> vertices;
-    for (size_t i = 0; i < model.bufferViews.size(); i++)
-    {
-        tinygltf::BufferView buffer_view = model.bufferViews[i];
-        if (buffer_view.target == 0) continue;
-        tinygltf::Buffer buffer = model.buffers[buffer_view.buffer];
-        std::cout << buffer.data.size() << std::endl;
-    }
+    std::cout << model.defaultScene << std::endl;
+    std::cout << model.nodes.size() << std::endl;
+    tinygltf::Scene scene = model.scenes[0];
 
+    for (int node_idx: scene.nodes)
+    {
+        tinygltf::Node node = model.nodes[node_idx];
+        if (node.mesh != -1) 
+        {
+            tinygltf::Mesh mesh = model.meshes[node.mesh];
+            for (tinygltf::Primitive primitive : mesh.primitives)
+            { 
+                tinygltf::BufferView indices_buffer_view = model.bufferViews[model.accessors[primitive.indices].bufferView];
+                tinygltf::Accessor accessor = model.accessors[primitive.indices];
+                std::vector<unsigned char> buffer = model.buffers[indices_buffer_view.buffer].data;
+                size_t indices_start = indices_buffer_view.byteOffset + model.accessors[primitive.indices].byteOffset;
+                int element_count = 1;
+                mesh_data.indices.resize(accessor.count * element_count);
+                std::memcpy(
+                    mesh_data.indices.data(),
+                    buffer.data() + indices_start,
+                    accessor.count * element_count * 2
+                );
+
+                std::cout << primitive.attributes.size() << std::endl;
+                for (auto it = primitive.attributes.begin(); it != primitive.attributes.end(); ++it)
+                { 
+                    if (it->first == "NORMAL") continue;
+                    tinygltf::Accessor accessor = model.accessors[it->second];
+                    tinygltf::BufferView buffer_view = model.bufferViews[accessor.bufferView];
+                    std::cout << accessor.count << std::endl;
+                    std::cout << buffer_view.byteLength << std::endl;
+                    std::cout << buffer_view.byteLength / accessor.count << std::endl;
+                    size_t buffer_offset = buffer_view.byteOffset + accessor.byteOffset;
+                    const std::vector<unsigned char> &buffer = model.buffers[buffer_view.buffer].data;
+                    if (accessor.type == TINYGLTF_TYPE_VEC3) {
+                        std::cout << it->first << std::endl;
+                        int element_count = 3;
+                        mesh_data.vertices.resize(accessor.count * element_count);
+                        std::memcpy(
+                            mesh_data.vertices.data(), 
+                            buffer.data() + buffer_offset, 
+                            accessor.count * element_count * 4
+                        );
+                    }
+                    if (accessor.type == TINYGLTF_TYPE_VEC2) {
+                        std::cout << it->first << std::endl;
+                        int element_count = 2;
+                        mesh_data.uv_coords.resize(accessor.count * element_count);
+                        std::memcpy(
+                            mesh_data.uv_coords.data(), 
+                            buffer.data() + buffer_offset, 
+                            accessor.count * element_count * 4
+                        );
+                    }
+                }
+                for (int i = 0; i < mesh_data.vertices.size(); i++) {
+                    for (int j = 0; j < 3; j++) mesh_data.colours.push_back(
+                        static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
+                    );
+                    mesh_data.colours.push_back(1.0);
+                }
+            };
+        }
+
+        else 
+        {
+            std::cout << "Aint shit bro" << std::endl;
+        }
+    }
     return mesh_data;
 }
 
-std::vector<MeshData> load_mesh_data(const std::vector<std::string> &reprs)
+MeshData load_mesh_data(const std::vector<std::string> &reprs)
 {
-    std::vector<MeshData> result;
     tinygltf::TinyGLTF loader;
     for (std::string repr : reprs)
     {
-        std::cout << "Parsing: " << repr << std::endl;
+        std::cout << "Parsing gltf: " << repr << std::endl;
         tinygltf::Model model = load_gltf(repr, loader);
-        parse_mesh(model);
-        
+        return load_mesh(model);
     }
-    return result;
+    return MeshData();
 }
 
 struct MaterialData
@@ -234,6 +496,13 @@ void allocate_memory()
     // uv coord region:
     // norm region:
     // animation region:
+};
+
+enum ARRAYS
+{
+    VERTICES,
+    INDICES,
+    TEXTURES,
 };
 
 
@@ -271,47 +540,42 @@ struct RenderData
     size_t index_count = 0;
 };
 
-std::vector<RenderData> initialise_render()
+std::vector<RenderData> initialise_render(MeshData mesh_data)
 {
     RenderData render_data;
-    std::vector<glm::vec3>  vertices = 
-    {
-        glm::vec3(0.0,0.5,0.0), 
-        glm::vec3(0.5,0.0,0.0), 
-        glm::vec3(-0.5,0.0,0.0)
-    };
-
-    std::vector<glm::vec4> colours = 
-    {
-        glm::vec4(1.0,0.0,0.0, 1.0), 
-        glm::vec4(0.0,1.0,0.0, 1.0), 
-        glm::vec4(0.0,0.0,1.0, 1.0)
-    };
-
-    std::vector<unsigned int> indices = {0, 1, 2};
-    render_data.index_count = indices.size();
-
+    std::vector<unsigned short> indices;
+    glCreateVertexArrays(1, &render_data.vao); // Create the VAO!
+    render_data.index_count = mesh_data.indices.size();
+    
     glCreateBuffers(1, &render_data.vertex_vbo);
     glNamedBufferData(
         render_data.vertex_vbo, 
-        vertices.size() * sizeof(glm::vec3), 
-        vertices.data(), 
+        mesh_data.vertices.size() * sizeof(glm::vec3), 
+        mesh_data.vertices.data(), 
         GL_DYNAMIC_DRAW
     );
 
     glCreateBuffers(1, &render_data.colour_vbo);
     glNamedBufferData(
         render_data.colour_vbo, 
-        colours.size() * sizeof(glm::vec4), 
-        colours.data(), 
+        mesh_data.colours.size() * sizeof(glm::vec4), 
+        mesh_data.colours.data(), 
         GL_DYNAMIC_DRAW
     );
 
     glCreateBuffers(1, &render_data.index_ebo);
     glNamedBufferData(
         render_data.index_ebo,
-        indices.size() * sizeof(unsigned int),
-        indices.data(),
+        mesh_data.indices.size() * sizeof(unsigned short),
+        mesh_data.indices.data(),
+        GL_DYNAMIC_DRAW
+    );
+
+    glCreateBuffers(1, &render_data.index_ebo);
+    glNamedBufferData(
+        render_data.index_ebo,
+        mesh_data.indices.size() * sizeof(unsigned short),
+        mesh_data.indices.data(),
         GL_DYNAMIC_DRAW
     );
 
@@ -412,13 +676,31 @@ void draw(std::vector<RenderData> render_data)
         glDrawElements(
             GL_TRIANGLES, 
             render_datum.index_count,
-            GL_UNSIGNED_INT,
+            GL_UNSIGNED_SHORT,
             nullptr
         );
     }
 }
 
+void render(std::stop_token stop_token)
+{
+    std::vector<GLuint> shaders = 
+    {
+        add_shader("vert.glsl", GL_VERTEX_SHADER), 
+        add_shader("frag.glsl", GL_FRAGMENT_SHADER)
+    };
 
+    GLuint program = create_program(shaders);
+
+    // std::vector<RenderData> render_data = initialise_render();
+    int wait_ms = 16;
+    while (!stop_token.stop_requested()) 
+    {
+        glUseProgram(program);
+        // draw(render_data);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
+    }
+}
 
 void translate_player(GameState &game_state, glm::vec3 vector)
 {
@@ -435,6 +717,7 @@ void translate_player(GameState &game_state, glm::vec3 vector)
 
 void game(std::stop_token stop_token)
 {
+    std::jthread render_thread(render);
     int wait_ms = 1;
 
     std::map<int, bool> key_map;
@@ -471,9 +754,6 @@ int main()
 
     int width = 1024;
     int height = 768;
-
-    load_mesh_data({"DamagedHelmet.glb"});
-    return 0;
     std::string window_name = "goodbye";
     auto window = glfwCreateWindow(width, height, window_name.c_str(), NULL, NULL);
 
@@ -493,6 +773,7 @@ int main()
         return 1;
     }
 
+    ;
     // std::jthread game_thread(game);
 
     glEnable(GL_DEPTH_TEST);
@@ -507,7 +788,8 @@ int main()
     };
 
     GLuint program = create_program(shaders);
-    std::vector<RenderData> render_data = initialise_render();
+
+    std::vector<RenderData> render_data = initialise_render(load_mesh_data({"DamagedHelmet.glb"}));
 
     while (!glfwWindowShouldClose(window)) 
     {
