@@ -44,19 +44,14 @@ cmake_ninja_workdir = /home/algiers/jubajam-core/build-cmake/
 
 build cmake_object_order_depends_target_jubajam-core: phony || cmake_object_order_depends_target_glad cmake_object_order_depends_target_glfw cmake_object_order_depends_target_glm cmake_object_order_depends_target_tinygltf
 
-build CMakeFiles/jubajam-core.dir/src/parser.cpp.o: CXX_COMPILER__jubajam-core_unscanned_ /home/algiers/jubajam-core/src/parser.cpp || cmake_object_order_depends_target_jubajam-core
-  DEP_FILE = CMakeFiles/jubajam-core.dir/src/parser.cpp.o.d
-  FLAGS = -std=c++20 -std=gnu++20
-  INCLUDES = -I/home/algiers/jubajam-core/include -I/home/algiers/jubajam-core/deps/glad/include -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glm -I/home/algiers/jubajam-core/deps/json/include -I/home/algiers/jubajam-core/include/tinygltf
-  OBJECT_DIR = CMakeFiles/jubajam-core.dir
-  OBJECT_FILE_DIR = CMakeFiles/jubajam-core.dir/src
-
 build CMakeFiles/jubajam-core.dir/src/main.cpp.o: CXX_COMPILER__jubajam-core_unscanned_ /home/algiers/jubajam-core/src/main.cpp || cmake_object_order_depends_target_jubajam-core
   DEP_FILE = CMakeFiles/jubajam-core.dir/src/main.cpp.o.d
   FLAGS = -std=c++20 -std=gnu++20
   INCLUDES = -I/home/algiers/jubajam-core/include -I/home/algiers/jubajam-core/deps/glad/include -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glm -I/home/algiers/jubajam-core/deps/json/include -I/home/algiers/jubajam-core/include/tinygltf
   OBJECT_DIR = CMakeFiles/jubajam-core.dir
   OBJECT_FILE_DIR = CMakeFiles/jubajam-core.dir/src
+  TARGET_COMPILE_PDB = CMakeFiles/jubajam-core.dir/
+  TARGET_PDB = jubajam-core.pdb
 
 
 # =============================================================================
@@ -66,23 +61,23 @@ build CMakeFiles/jubajam-core.dir/src/main.cpp.o: CXX_COMPILER__jubajam-core_uns
 #############################################
 # Link the executable jubajam-core
 
-build jubajam-core: CXX_EXECUTABLE_LINKER__jubajam-core_ CMakeFiles/jubajam-core.dir/src/parser.cpp.o CMakeFiles/jubajam-core.dir/src/main.cpp.o | deps/glad/libglad.a deps/glfw-3.4/src/libglfw3.a deps/glm/glm/libglm.a include/tinygltf/libtinygltf.a /usr/lib64/librt.a /usr/lib64/libm.so || deps/glad/libglad.a deps/glfw-3.4/src/libglfw3.a deps/glm/glm/libglm.a include/tinygltf/libtinygltf.a
+build jubajam-core: CXX_EXECUTABLE_LINKER__jubajam-core_ CMakeFiles/jubajam-core.dir/src/main.cpp.o | deps/glad/libglad.a deps/glfw-3.4/src/libglfw3.a deps/glm/glm/libglm.a include/tinygltf/libtinygltf.a /usr/lib/x86_64-linux-gnu/librt.a /usr/lib/x86_64-linux-gnu/libm.so || deps/glad/libglad.a deps/glfw-3.4/src/libglfw3.a deps/glm/glm/libglm.a include/tinygltf/libtinygltf.a
   FLAGS = -std=c++20
-  LINK_LIBRARIES = deps/glad/libglad.a  deps/glfw-3.4/src/libglfw3.a  deps/glm/glm/libglm.a  include/tinygltf/libtinygltf.a  /usr/lib64/librt.a  -lm  -ldl
+  LINK_LIBRARIES = deps/glad/libglad.a  deps/glfw-3.4/src/libglfw3.a  deps/glm/glm/libglm.a  include/tinygltf/libtinygltf.a  -lassimp  /usr/lib/x86_64-linux-gnu/librt.a  -lm  -ldl
   OBJECT_DIR = CMakeFiles/jubajam-core.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = CMakeFiles/jubajam-core.dir/
   TARGET_FILE = jubajam-core
-  TARGET_PDB = jubajam-core.dbg
+  TARGET_PDB = jubajam-core.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build edit_cache: phony CMakeFiles/edit_cache.util
@@ -160,6 +155,8 @@ build deps/glad/CMakeFiles/glad.dir/src/glad.c.o: C_COMPILER__glad_unscanned_ /h
   INCLUDES = -I/home/algiers/jubajam-core/deps/glad/include
   OBJECT_DIR = deps/glad/CMakeFiles/glad.dir
   OBJECT_FILE_DIR = deps/glad/CMakeFiles/glad.dir/src
+  TARGET_COMPILE_PDB = deps/glad/CMakeFiles/glad.dir/glad.pdb
+  TARGET_PDB = deps/glad/libglad.pdb
 
 
 # =============================================================================
@@ -173,17 +170,17 @@ build deps/glad/libglad.a: C_STATIC_LIBRARY_LINKER__glad_ deps/glad/CMakeFiles/g
   OBJECT_DIR = deps/glad/CMakeFiles/glad.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = deps/glad/CMakeFiles/glad.dir/glad.pdb
   TARGET_FILE = deps/glad/libglad.a
-  TARGET_PDB = glad.a.dbg
+  TARGET_PDB = deps/glad/libglad.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build deps/glad/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glad && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glad && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/glad/edit_cache: phony deps/glad/CMakeFiles/edit_cache.util
@@ -258,9 +255,8 @@ build deps/glfw-3.4/uninstall: phony deps/glfw-3.4/CMakeFiles/uninstall
 # Utility command for edit_cache
 
 build deps/glfw-3.4/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4 && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4 && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/glfw-3.4/edit_cache: phony deps/glfw-3.4/CMakeFiles/edit_cache.util
@@ -347,6 +343,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/context.c.o: C_COMPILER__glfw_unscan
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/init.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -355,6 +353,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o: C_COMPILER__glfw_unscanned
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/input.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/input.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -363,6 +363,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/input.c.o: C_COMPILER__glfw_unscanne
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/monitor.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/monitor.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -371,6 +373,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/monitor.c.o: C_COMPILER__glfw_unscan
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/platform.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/platform.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -379,6 +383,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/platform.c.o: C_COMPILER__glfw_unsca
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/vulkan.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/vulkan.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -387,6 +393,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/vulkan.c.o: C_COMPILER__glfw_unscann
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/window.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/window.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -395,6 +403,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/window.c.o: C_COMPILER__glfw_unscann
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/egl_context.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/egl_context.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -403,6 +413,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/egl_context.c.o: C_COMPILER__glfw_un
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/osmesa_context.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/osmesa_context.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -411,6 +423,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/osmesa_context.c.o: C_COMPILER__glfw
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_init.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/null_init.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -419,6 +433,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_init.c.o: C_COMPILER__glfw_unsc
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_monitor.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/null_monitor.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -427,6 +443,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_monitor.c.o: C_COMPILER__glfw_u
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_window.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/null_window.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -435,6 +453,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_window.c.o: C_COMPILER__glfw_un
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_joystick.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/null_joystick.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -443,6 +463,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/null_joystick.c.o: C_COMPILER__glfw_
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_module.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_module.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -451,6 +473,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_module.c.o: C_COMPILER__glfw_u
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_time.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_time.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -459,6 +483,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_time.c.o: C_COMPILER__glfw_uns
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_thread.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_thread.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -467,6 +493,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_thread.c.o: C_COMPILER__glfw_u
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_init.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_init.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -475,6 +503,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_init.c.o: C_COMPILER__glfw_unsca
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_monitor.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_monitor.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -483,6 +513,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_monitor.c.o: C_COMPILER__glfw_un
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_window.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/x11_window.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -491,6 +523,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/x11_window.c.o: C_COMPILER__glfw_uns
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/xkb_unicode.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/xkb_unicode.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -499,6 +533,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/xkb_unicode.c.o: C_COMPILER__glfw_un
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/glx_context.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/glx_context.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -507,6 +543,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/glx_context.c.o: C_COMPILER__glfw_un
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_init.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_init.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -515,6 +553,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_init.c.o: C_COMPILER__glfw_unscan
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_monitor.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_monitor.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -523,6 +563,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_monitor.c.o: C_COMPILER__glfw_uns
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/wl_window.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -531,6 +573,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o: C_COMPILER__glfw_unsc
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/linux_joystick.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/linux_joystick.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -539,6 +583,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/linux_joystick.c.o: C_COMPILER__glfw
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_poll.c.o: C_COMPILER__glfw_unscanned_ /home/algiers/jubajam-core/deps/glfw-3.4/src/posix_poll.c || cmake_object_order_depends_target_glfw
   DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
@@ -547,6 +593,8 @@ build deps/glfw-3.4/src/CMakeFiles/glfw.dir/posix_poll.c.o: C_COMPILER__glfw_uns
   INCLUDES = -I/home/algiers/jubajam-core/deps/glfw-3.4/include -I/home/algiers/jubajam-core/deps/glfw-3.4/src -I/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   OBJECT_FILE_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 
 # =============================================================================
@@ -560,8 +608,9 @@ build deps/glfw-3.4/src/libglfw3.a: C_STATIC_LIBRARY_LINKER__glfw_ deps/glfw-3.4
   OBJECT_DIR = deps/glfw-3.4/src/CMakeFiles/glfw.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = deps/glfw-3.4/src/CMakeFiles/glfw.dir/glfw.pdb
   TARGET_FILE = deps/glfw-3.4/src/libglfw3.a
-  TARGET_PDB = glfw3.a.dbg
+  TARGET_PDB = deps/glfw-3.4/src/libglfw3.pdb
 
 
 #############################################
@@ -574,9 +623,8 @@ build deps/glfw-3.4/src/update_mappings: phony deps/glfw-3.4/src/CMakeFiles/upda
 # Utility command for edit_cache
 
 build deps/glfw-3.4/src/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/glfw-3.4/src/edit_cache: phony deps/glfw-3.4/src/CMakeFiles/edit_cache.util
@@ -812,18 +860,11 @@ build deps/glfw-3.4/src/CMakeFiles/update_mappings | ${cmake_ninja_workdir}deps/
 
 
 #############################################
-# Utility command for docs
-
-build deps/glfw-3.4/docs/docs: phony
-
-
-#############################################
 # Utility command for edit_cache
 
 build deps/glfw-3.4/docs/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/glfw-3.4/docs/edit_cache: phony deps/glfw-3.4/docs/CMakeFiles/edit_cache.util
@@ -892,9 +933,8 @@ build deps/glfw-3.4/docs/install/strip: phony deps/glfw-3.4/docs/CMakeFiles/inst
 # Utility command for edit_cache
 
 build deps/glm/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glm && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glm && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/glm/edit_cache: phony deps/glm/CMakeFiles/edit_cache.util
@@ -973,6 +1013,8 @@ build deps/glm/glm/CMakeFiles/glm.dir/detail/glm.cpp.o: CXX_COMPILER__glm_unscan
   INCLUDES = -I/home/algiers/jubajam-core/deps/glm
   OBJECT_DIR = deps/glm/glm/CMakeFiles/glm.dir
   OBJECT_FILE_DIR = deps/glm/glm/CMakeFiles/glm.dir/detail
+  TARGET_COMPILE_PDB = deps/glm/glm/CMakeFiles/glm.dir/glm.pdb
+  TARGET_PDB = deps/glm/glm/libglm.pdb
 
 
 # =============================================================================
@@ -987,17 +1029,17 @@ build deps/glm/glm/libglm.a: CXX_STATIC_LIBRARY_LINKER__glm_ deps/glm/glm/CMakeF
   OBJECT_DIR = deps/glm/glm/CMakeFiles/glm.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = deps/glm/glm/CMakeFiles/glm.dir/glm.pdb
   TARGET_FILE = deps/glm/glm/libglm.a
-  TARGET_PDB = glm.a.dbg
+  TARGET_PDB = deps/glm/glm/libglm.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build deps/glm/glm/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glm/glm && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/glm/glm && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/glm/glm/edit_cache: phony deps/glm/glm/CMakeFiles/edit_cache.util
@@ -1066,9 +1108,8 @@ build deps/glm/glm/install/strip: phony deps/glm/glm/CMakeFiles/install/strip.ut
 # Utility command for edit_cache
 
 build deps/json/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/json && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/deps/json && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build deps/json/edit_cache: phony deps/json/CMakeFiles/edit_cache.util
@@ -1146,6 +1187,8 @@ build include/tinygltf/CMakeFiles/loader_example.dir/loader_example.cc.o: CXX_CO
   FLAGS = -std=c++20 -std=c++11
   OBJECT_DIR = include/tinygltf/CMakeFiles/loader_example.dir
   OBJECT_FILE_DIR = include/tinygltf/CMakeFiles/loader_example.dir
+  TARGET_COMPILE_PDB = include/tinygltf/CMakeFiles/loader_example.dir/
+  TARGET_PDB = include/tinygltf/loader_example.pdb
 
 
 # =============================================================================
@@ -1160,8 +1203,9 @@ build include/tinygltf/loader_example: CXX_EXECUTABLE_LINKER__loader_example_ in
   OBJECT_DIR = include/tinygltf/CMakeFiles/loader_example.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = include/tinygltf/CMakeFiles/loader_example.dir/
   TARGET_FILE = include/tinygltf/loader_example
-  TARGET_PDB = loader_example.dbg
+  TARGET_PDB = include/tinygltf/loader_example.pdb
 
 # =============================================================================
 # Object build statements for STATIC_LIBRARY target tinygltf
@@ -1177,6 +1221,8 @@ build include/tinygltf/CMakeFiles/tinygltf.dir/tiny_gltf.cc.o: CXX_COMPILER__tin
   FLAGS = -std=c++20 -std=c++11
   OBJECT_DIR = include/tinygltf/CMakeFiles/tinygltf.dir
   OBJECT_FILE_DIR = include/tinygltf/CMakeFiles/tinygltf.dir
+  TARGET_COMPILE_PDB = include/tinygltf/CMakeFiles/tinygltf.dir/tinygltf.pdb
+  TARGET_PDB = include/tinygltf/libtinygltf.pdb
 
 
 # =============================================================================
@@ -1191,17 +1237,17 @@ build include/tinygltf/libtinygltf.a: CXX_STATIC_LIBRARY_LINKER__tinygltf_ inclu
   OBJECT_DIR = include/tinygltf/CMakeFiles/tinygltf.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = include/tinygltf/CMakeFiles/tinygltf.dir/tinygltf.pdb
   TARGET_FILE = include/tinygltf/libtinygltf.a
-  TARGET_PDB = tinygltf.a.dbg
+  TARGET_PDB = include/tinygltf/libtinygltf.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build include/tinygltf/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/algiers/jubajam-core/build-cmake/include/tinygltf && /usr/bin/ccmake -S/home/algiers/jubajam-core -B/home/algiers/jubajam-core/build-cmake
-  DESC = Running CMake cache editor...
-  pool = console
+  COMMAND = cd /home/algiers/jubajam-core/build-cmake/include/tinygltf && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
   restat = 1
 
 build include/tinygltf/edit_cache: phony include/tinygltf/CMakeFiles/edit_cache.util
@@ -1263,8 +1309,6 @@ build include/tinygltf/install/strip: phony include/tinygltf/CMakeFiles/install/
 # =============================================================================
 # Target aliases.
 
-build docs: phony deps/glfw-3.4/docs/docs
-
 build glad: phony deps/glad/libglad.a
 
 build glfw: phony deps/glfw-3.4/src/libglfw3.a
@@ -1316,7 +1360,7 @@ build deps/glfw-3.4/all: phony deps/glfw-3.4/src/all deps/glfw-3.4/docs/all
 #############################################
 # Folder: /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs
 
-build deps/glfw-3.4/docs/all: phony deps/glfw-3.4/docs/docs
+build deps/glfw-3.4/docs/all: phony
 
 # =============================================================================
 
@@ -1360,14 +1404,14 @@ build include/tinygltf/all: phony include/tinygltf/loader_example include/tinygl
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/algiers/jubajam-core/CMakeLists.txt /home/algiers/jubajam-core/deps/glad/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/CMake/cmake_uninstall.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3.pc.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3Config.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/docs/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/docs/Doxyfile.in /home/algiers/jubajam-core/deps/glfw-3.4/src/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/json/CMakeLists.txt /home/algiers/jubajam-core/deps/json/cmake/config.cmake.in /home/algiers/jubajam-core/deps/json/cmake/nlohmann_jsonConfigVersion.cmake.in /home/algiers/jubajam-core/deps/json/cmake/pkg-config.pc.in /home/algiers/jubajam-core/include/tinygltf/CMakeLists.txt /home/algiers/jubajam-core/include/tinygltf/cmake/TinyGLTFConfig.cmake.in /usr/share/cmake/Modules/BasicConfigVersion-SameMajorVersion.cmake.in /usr/share/cmake/Modules/CMakeCInformation.cmake /usr/share/cmake/Modules/CMakeCXXInformation.cmake /usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake/Modules/CMakeDependentOption.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeLanguageInformation.cmake /usr/share/cmake/Modules/CMakePackageConfigHelpers.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/CheckCSourceCompiles.cmake /usr/share/cmake/Modules/CheckFunctionExists.cmake /usr/share/cmake/Modules/CheckIncludeFile.cmake /usr/share/cmake/Modules/CheckIncludeFiles.cmake /usr/share/cmake/Modules/CheckLibraryExists.cmake /usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake/Modules/Compiler/Clang.cmake /usr/share/cmake/Modules/Compiler/GNU-C.cmake /usr/share/cmake/Modules/Compiler/GNU.cmake /usr/share/cmake/Modules/ExternalProject.cmake /usr/share/cmake/Modules/ExternalProject/shared_internal_commands.cmake /usr/share/cmake/Modules/FindDoxygen.cmake /usr/share/cmake/Modules/FindFontconfig.cmake /usr/share/cmake/Modules/FindFreetype.cmake /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake/Modules/FindPackageMessage.cmake /usr/share/cmake/Modules/FindPkgConfig.cmake /usr/share/cmake/Modules/FindThreads.cmake /usr/share/cmake/Modules/FindX11.cmake /usr/share/cmake/Modules/GNUInstallDirs.cmake /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake /usr/share/cmake/Modules/SelectLibraryConfigurations.cmake /usr/share/cmake/Modules/WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles/3.28.2/CMakeCCompiler.cmake CMakeFiles/3.28.2/CMakeCXXCompiler.cmake CMakeFiles/3.28.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/algiers/jubajam-core/CMakeLists.txt /home/algiers/jubajam-core/deps/glad/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/CMake/cmake_uninstall.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3.pc.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3Config.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/docs/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/src/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/json/CMakeLists.txt /home/algiers/jubajam-core/deps/json/cmake/config.cmake.in /home/algiers/jubajam-core/deps/json/cmake/nlohmann_jsonConfigVersion.cmake.in /home/algiers/jubajam-core/deps/json/cmake/pkg-config.pc.in /home/algiers/jubajam-core/include/tinygltf/CMakeLists.txt /home/algiers/jubajam-core/include/tinygltf/cmake/TinyGLTFConfig.cmake.in /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpConfig.cmake /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpConfigVersion.cmake /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpTargets-none.cmake /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpTargets.cmake /usr/share/cmake-3.28/Modules/BasicConfigVersion-SameMajorVersion.cmake.in /usr/share/cmake-3.28/Modules/CMakeCCompiler.cmake.in /usr/share/cmake-3.28/Modules/CMakeCCompilerABI.c /usr/share/cmake-3.28/Modules/CMakeCInformation.cmake /usr/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in /usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp /usr/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.28/Modules/CMakeCompilerIdDetection.cmake /usr/share/cmake-3.28/Modules/CMakeDependentOption.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompileFeatures.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompilerABI.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake /usr/share/cmake-3.28/Modules/CMakeFindBinUtils.cmake /usr/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.28/Modules/CMakeNinjaFindMake.cmake /usr/share/cmake-3.28/Modules/CMakePackageConfigHelpers.cmake /usr/share/cmake-3.28/Modules/CMakeParseImplicitIncludeInfo.cmake /usr/share/cmake-3.28/Modules/CMakeParseImplicitLinkInfo.cmake /usr/share/cmake-3.28/Modules/CMakeParseLibraryArchitecture.cmake /usr/share/cmake-3.28/Modules/CMakeSystem.cmake.in /usr/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.28/Modules/CMakeTestCCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeTestCXXCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake /usr/share/cmake-3.28/Modules/CheckCSourceCompiles.cmake /usr/share/cmake-3.28/Modules/CheckFunctionExists.cmake /usr/share/cmake-3.28/Modules/CheckIncludeFile.cmake /usr/share/cmake-3.28/Modules/CheckIncludeFiles.cmake /usr/share/cmake-3.28/Modules/CheckLibraryExists.cmake /usr/share/cmake-3.28/Modules/Compiler/ADSP-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/ARMCC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/ARMClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/AppleClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Borland-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-FindBinUtils.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang.cmake /usr/share/cmake-3.28/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Cray-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/CrayClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GHS-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-C.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-FindBinUtils.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU.cmake /usr/share/cmake-3.28/Modules/Compiler/HP-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IAR-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Intel-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/LCC-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/MSVC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/NVHPC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/OrangeC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/PGI-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/PathScale-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SCO-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/TI-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Tasking-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Watcom-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XL-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/zOS-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/ExternalProject.cmake /usr/share/cmake-3.28/Modules/ExternalProject/shared_internal_commands.cmake /usr/share/cmake-3.28/Modules/FindDoxygen.cmake /usr/share/cmake-3.28/Modules/FindFontconfig.cmake /usr/share/cmake-3.28/Modules/FindFreetype.cmake /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.28/Modules/FindPackageMessage.cmake /usr/share/cmake-3.28/Modules/FindPkgConfig.cmake /usr/share/cmake-3.28/Modules/FindThreads.cmake /usr/share/cmake-3.28/Modules/FindX11.cmake /usr/share/cmake-3.28/Modules/GNUInstallDirs.cmake /usr/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake-3.28/Modules/Internal/FeatureTesting.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-Determine-CXX.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake-3.28/Modules/Platform/Linux.cmake /usr/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /usr/share/cmake-3.28/Modules/SelectLibraryConfigurations.cmake /usr/share/cmake-3.28/Modules/WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles/3.28.3/CMakeCCompiler.cmake CMakeFiles/3.28.3/CMakeCXXCompiler.cmake CMakeFiles/3.28.3/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/algiers/jubajam-core/CMakeLists.txt /home/algiers/jubajam-core/deps/glad/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/CMake/cmake_uninstall.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3.pc.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3Config.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/docs/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/docs/Doxyfile.in /home/algiers/jubajam-core/deps/glfw-3.4/src/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/json/CMakeLists.txt /home/algiers/jubajam-core/deps/json/cmake/config.cmake.in /home/algiers/jubajam-core/deps/json/cmake/nlohmann_jsonConfigVersion.cmake.in /home/algiers/jubajam-core/deps/json/cmake/pkg-config.pc.in /home/algiers/jubajam-core/include/tinygltf/CMakeLists.txt /home/algiers/jubajam-core/include/tinygltf/cmake/TinyGLTFConfig.cmake.in /usr/share/cmake/Modules/BasicConfigVersion-SameMajorVersion.cmake.in /usr/share/cmake/Modules/CMakeCInformation.cmake /usr/share/cmake/Modules/CMakeCXXInformation.cmake /usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake/Modules/CMakeDependentOption.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeLanguageInformation.cmake /usr/share/cmake/Modules/CMakePackageConfigHelpers.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/CheckCSourceCompiles.cmake /usr/share/cmake/Modules/CheckFunctionExists.cmake /usr/share/cmake/Modules/CheckIncludeFile.cmake /usr/share/cmake/Modules/CheckIncludeFiles.cmake /usr/share/cmake/Modules/CheckLibraryExists.cmake /usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake/Modules/Compiler/Clang.cmake /usr/share/cmake/Modules/Compiler/GNU-C.cmake /usr/share/cmake/Modules/Compiler/GNU.cmake /usr/share/cmake/Modules/ExternalProject.cmake /usr/share/cmake/Modules/ExternalProject/shared_internal_commands.cmake /usr/share/cmake/Modules/FindDoxygen.cmake /usr/share/cmake/Modules/FindFontconfig.cmake /usr/share/cmake/Modules/FindFreetype.cmake /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake/Modules/FindPackageMessage.cmake /usr/share/cmake/Modules/FindPkgConfig.cmake /usr/share/cmake/Modules/FindThreads.cmake /usr/share/cmake/Modules/FindX11.cmake /usr/share/cmake/Modules/GNUInstallDirs.cmake /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake /usr/share/cmake/Modules/SelectLibraryConfigurations.cmake /usr/share/cmake/Modules/WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles/3.28.2/CMakeCCompiler.cmake CMakeFiles/3.28.2/CMakeCXXCompiler.cmake CMakeFiles/3.28.2/CMakeSystem.cmake: phony
+build /home/algiers/jubajam-core/CMakeLists.txt /home/algiers/jubajam-core/deps/glad/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/CMake/cmake_uninstall.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3.pc.in /home/algiers/jubajam-core/deps/glfw-3.4/CMake/glfw3Config.cmake.in /home/algiers/jubajam-core/deps/glfw-3.4/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/docs/CMakeLists.txt /home/algiers/jubajam-core/deps/glfw-3.4/src/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/glm/glm/CMakeLists.txt /home/algiers/jubajam-core/deps/json/CMakeLists.txt /home/algiers/jubajam-core/deps/json/cmake/config.cmake.in /home/algiers/jubajam-core/deps/json/cmake/nlohmann_jsonConfigVersion.cmake.in /home/algiers/jubajam-core/deps/json/cmake/pkg-config.pc.in /home/algiers/jubajam-core/include/tinygltf/CMakeLists.txt /home/algiers/jubajam-core/include/tinygltf/cmake/TinyGLTFConfig.cmake.in /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpConfig.cmake /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpConfigVersion.cmake /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpTargets-none.cmake /usr/lib/x86_64-linux-gnu/cmake/assimp-5.3/assimpTargets.cmake /usr/share/cmake-3.28/Modules/BasicConfigVersion-SameMajorVersion.cmake.in /usr/share/cmake-3.28/Modules/CMakeCCompiler.cmake.in /usr/share/cmake-3.28/Modules/CMakeCCompilerABI.c /usr/share/cmake-3.28/Modules/CMakeCInformation.cmake /usr/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in /usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp /usr/share/cmake-3.28/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.28/Modules/CMakeCompilerIdDetection.cmake /usr/share/cmake-3.28/Modules/CMakeDependentOption.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompileFeatures.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompilerABI.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake /usr/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake /usr/share/cmake-3.28/Modules/CMakeFindBinUtils.cmake /usr/share/cmake-3.28/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.28/Modules/CMakeNinjaFindMake.cmake /usr/share/cmake-3.28/Modules/CMakePackageConfigHelpers.cmake /usr/share/cmake-3.28/Modules/CMakeParseImplicitIncludeInfo.cmake /usr/share/cmake-3.28/Modules/CMakeParseImplicitLinkInfo.cmake /usr/share/cmake-3.28/Modules/CMakeParseLibraryArchitecture.cmake /usr/share/cmake-3.28/Modules/CMakeSystem.cmake.in /usr/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.28/Modules/CMakeTestCCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeTestCXXCompiler.cmake /usr/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake /usr/share/cmake-3.28/Modules/CheckCSourceCompiles.cmake /usr/share/cmake-3.28/Modules/CheckFunctionExists.cmake /usr/share/cmake-3.28/Modules/CheckIncludeFile.cmake /usr/share/cmake-3.28/Modules/CheckIncludeFiles.cmake /usr/share/cmake-3.28/Modules/CheckLibraryExists.cmake /usr/share/cmake-3.28/Modules/Compiler/ADSP-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/ARMCC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/ARMClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/AppleClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Borland-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang-FindBinUtils.cmake /usr/share/cmake-3.28/Modules/Compiler/Clang.cmake /usr/share/cmake-3.28/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Cray-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/CrayClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GHS-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-C.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU-FindBinUtils.cmake /usr/share/cmake-3.28/Modules/Compiler/GNU.cmake /usr/share/cmake-3.28/Modules/Compiler/HP-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IAR-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Intel-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/LCC-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/MSVC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/NVHPC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/OrangeC-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/PGI-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/PathScale-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SCO-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/TI-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Tasking-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/Watcom-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XL-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/zOS-C-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /usr/share/cmake-3.28/Modules/ExternalProject.cmake /usr/share/cmake-3.28/Modules/ExternalProject/shared_internal_commands.cmake /usr/share/cmake-3.28/Modules/FindDoxygen.cmake /usr/share/cmake-3.28/Modules/FindFontconfig.cmake /usr/share/cmake-3.28/Modules/FindFreetype.cmake /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.28/Modules/FindPackageMessage.cmake /usr/share/cmake-3.28/Modules/FindPkgConfig.cmake /usr/share/cmake-3.28/Modules/FindThreads.cmake /usr/share/cmake-3.28/Modules/FindX11.cmake /usr/share/cmake-3.28/Modules/GNUInstallDirs.cmake /usr/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake-3.28/Modules/Internal/FeatureTesting.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-Determine-CXX.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.28/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake-3.28/Modules/Platform/Linux.cmake /usr/share/cmake-3.28/Modules/Platform/UnixPaths.cmake /usr/share/cmake-3.28/Modules/SelectLibraryConfigurations.cmake /usr/share/cmake-3.28/Modules/WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles/3.28.3/CMakeCCompiler.cmake CMakeFiles/3.28.3/CMakeCXXCompiler.cmake CMakeFiles/3.28.3/CMakeSystem.cmake: phony
 
 
 #############################################

@@ -27,7 +27,6 @@
 /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src/CMakeFiles/install.dir
 /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src/CMakeFiles/install/local.dir
 /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/src/CMakeFiles/install/strip.dir
-/home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs/CMakeFiles/docs.dir
 /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs/CMakeFiles/edit_cache.dir
 /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs/CMakeFiles/rebuild_cache.dir
 /home/algiers/jubajam-core/build-cmake/deps/glfw-3.4/docs/CMakeFiles/list_install_components.dir

@@ -9,7 +9,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(jubajam-core)
 add_executable(${PROJECT_NAME} 
-    src/parser.cpp
     src/main.cpp
 )
 
@@ -29,3 +28,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/include/tinygltf/)
 target_link_libraries(${PROJECT_NAME} PRIVATE tinygltf)
+
+find_package(assimp REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
