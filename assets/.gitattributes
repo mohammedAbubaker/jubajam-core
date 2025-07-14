@@ -1,0 +1,2 @@
+dining_room.glb filter=lfs diff=lfs merge=lfs -text
+bob_walking.fbx filter=lfs diff=lfs merge=lfs -text
