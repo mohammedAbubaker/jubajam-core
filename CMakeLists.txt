@@ -1,16 +1,13 @@
 cmake_minimum_required(VERSION 3.30)
-include(FetchContent)
-project(jubajam-core LANGUAGES CXX C)
-add_executable(main src/main.cpp)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ------------------------------------------------------------------ 
-add_library                 (l_glad STATIC vendor/glad/src/glad.c)
-set_target_properties       (l_glad PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories  (l_glad PUBLIC vendor/glad/include)
-# ------------------------------------------------------------------ 
-FetchContent_Declare        (h_assimp GIT_REPOSITORY https://github.com/assimp/assimp.git GIT_TAG v6.0.2)
-FetchContent_MakeAvailable  (h_assimp)
-add_library                 (l_assimp ALIAS assimp)
+include(FetchContent)
+project(jubaengine LANGUAGES CXX C)
+add_executable(main src/scratch.cpp)
+
+find_package(Vulkan REQUIRED)
 # ------------------------------------------------------------------ 
 FetchContent_Declare        (h_glfw GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.4)
 FetchContent_MakeAvailable  (h_glfw)
@@ -20,6 +17,5 @@ FetchContent_Declare        (l_stb GIT_REPOSITORY https://github.com/nothings/st
 FetchContent_MakeAvailable  (l_stb)
 add_library                 (l_stb INTERFACE)
 target_include_directories  (l_stb INTERFACE ${l_stb_SOURCE_DIR})
-# ------------------------------------------------------------------ 
 
-target_link_libraries(main PRIVATE l_glad l_assimp l_glfw l_stb)
+target_link_libraries(main PRIVATE Vulkan::Vulkan l_glfw l_stb)

@@ -1,3 +1,5 @@
 #!/bin/sh
 
-cmake -Bbuild -GNinja ; cmake --build build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -Bbuild -GNinja 
+ln -s build/compile_commands.json 
+cmake --build build 
