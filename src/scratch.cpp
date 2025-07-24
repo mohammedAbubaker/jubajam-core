@@ -485,6 +485,7 @@ private:
     present_info.pImageIndices = &image_index;
     present_info.pResults = nullptr;
     vkQueuePresentKHR(present_queue, &present_info);
+    std::cout << current_frame << std::endl;
     current_frame = (current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
   }
 
