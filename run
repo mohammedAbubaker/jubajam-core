@@ -1,5 +1,19 @@
 #!/bin/sh
 
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -Bbuild -GNinja 
-ln -s build/compile_commands.json 
-cmake --build build 
+# Recompile shaders
+cd shaders
+for filepath in shader.*; do
+    filename="${filepath##shaders/}"
+    echo "$filename"
+    outputname="${filename##shader.}.spv"
+    echo "Compiling $filename -> $outputname"
+    glslc "$filename" -o "$outputname"
+done
+cd ..
+
+mkdir build; cd build
+CXX=clang++ CC=clang CMAKE_EXPORT_COMPILE_COMMANDS=ON cmake -G Ninja ..
+ninja -j32
+cd ..
+./build/main
+cd ..
