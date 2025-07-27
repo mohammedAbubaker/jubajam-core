@@ -1,7 +1,10 @@
-#include <chrono>
+#include <cmath>
 #include <ctime>
 #include <vulkan/vulkan_core.h>
+#include <chrono>
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <algorithm>
@@ -17,7 +20,7 @@
 #include <vector>
 #include <array>
 
-constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+constexpr int MAX_FRAMES_IN_FLIGHT = 4;
 
 const uint32_t WIDTH = 1280;
 const uint32_t HEIGHT = 720;
@@ -38,35 +41,6 @@ const std::vector<const char*> validation_layers
 
 const bool enable_validation_layers = true;
 
-struct Vertex {
-    glm::vec2 pos;
-    glm::vec3 color;
-
-    static VkVertexInputBindingDescription get_binding_description() {
-        VkVertexInputBindingDescription binding_description{};
-        binding_description.binding = 0;
-        binding_description.stride = sizeof(Vertex);
-        binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-        return binding_description;
-    }
-
-    static std::array<VkVertexInputAttributeDescription, 2> get_attribute_descriptions() {
-        std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions{};
-
-        attribute_descriptions[0].binding = 0;
-        attribute_descriptions[0].location = 0;
-        attribute_descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
-        attribute_descriptions[0].offset = offsetof(Vertex, pos);
-
-        attribute_descriptions[1].binding = 0;
-        attribute_descriptions[1].location = 1;
-        attribute_descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-        attribute_descriptions[1].offset = offsetof(Vertex, color);
-
-        return attribute_descriptions;
-    }
-};
-
 class Application {
 public:
     void run()
@@ -78,6 +52,33 @@ public:
     }
 
 private:
+    struct UniformBufferObject {
+        glm::mat4x4 model;
+        glm::mat4x4 view;
+        glm::mat4x4 proj;
+    };
+    struct Vertex {
+        glm::vec2 pos;
+        glm::vec3 color;
+        static VkVertexInputBindingDescription get_binding_description() {
+            VkVertexInputBindingDescription binding_description{};
+            binding_description.binding = 0;
+            binding_description.stride = sizeof(Vertex);
+            binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+            return binding_description;
+        }
+        static std::array<VkVertexInputAttributeDescription, 2> get_attribute_descriptions() {
+            std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions{};
+            attribute_descriptions[0].binding = 0;
+            attribute_descriptions[0].location = 0;
+            attribute_descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+            attribute_descriptions[0].offset = offsetof(Vertex, pos);
+            attribute_descriptions[1].location = 1;
+            attribute_descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+            attribute_descriptions[1].offset = offsetof(Vertex, color);
+            return attribute_descriptions;
+        }
+    };
     VkPhysicalDeviceMemoryProperties mem_properties;
     const std::vector<Vertex> vertices = {
         {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
@@ -88,6 +89,11 @@ private:
     const std::vector<uint16_t> indices = {
         0, 1, 2, 2, 3, 0
     };
+    VkDescriptorPool descriptor_pool;
+    std::vector<VkDescriptorSet> descriptor_sets;
+    std::vector<VkBuffer> uniform_buffers;
+    std::vector<VkDeviceMemory> uniform_buffers_memory;
+    std::vector<void *> uniform_buffers_mapped;
     VkBuffer index_buffer;
     VkDeviceMemory index_buffer_memory;
     VkBuffer vertex_buffer;
@@ -107,6 +113,7 @@ private:
     std::vector<VkFramebuffer> swapchain_framebuffers;
     VkPipeline graphics_pipeline;
     VkRenderPass render_pass;
+    VkDescriptorSetLayout descriptor_set_layout;
     VkPipelineLayout pipeline_layout;
     std::vector<VkImage> swapchain_images;
     std::vector<VkImageView> swapchain_image_views;
@@ -157,7 +164,6 @@ private:
         const std::vector<VkSurfaceFormatKHR>& available_formats)
     {
         // Selects the best format
-
         for (const auto& available_format : available_formats) {
             if (available_format.format == VK_FORMAT_B8G8R8A8_SRGB
                 && available_format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
@@ -376,14 +382,90 @@ private:
         create_swapchain();
         create_image_views();
         create_render_pass();
+        create_descriptor_set_layout();
         create_graphics_pipeline();
         create_framebuffers();
         create_command_pool();
         vkGetPhysicalDeviceMemoryProperties(physical_device, &mem_properties);
         create_vertex_buffer();
         create_index_buffer();
+        create_uniform_buffers();
+        create_descriptor_pool();
+        create_descriptor_sets();
         create_command_buffers();
         create_sync_objects();
+    }
+    
+    void create_descriptor_pool() {
+        VkDescriptorPoolSize pool_size{};
+        pool_size.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        pool_size.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        VkDescriptorPoolCreateInfo pool_info{};
+        pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        pool_info.poolSizeCount = 1;
+        pool_info.pPoolSizes = &pool_size;
+        pool_info.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        if (vkCreateDescriptorPool(device,&pool_info, nullptr, &descriptor_pool) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create descriptor pool.");
+        }
+    }
+
+    void create_descriptor_sets() {
+        std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptor_set_layout);
+        VkDescriptorSetAllocateInfo alloc_info{};
+        alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        alloc_info.descriptorPool = descriptor_pool;
+        alloc_info.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        alloc_info.pSetLayouts = layouts.data();
+        descriptor_sets.resize(MAX_FRAMES_IN_FLIGHT);
+        if (vkAllocateDescriptorSets(device, &alloc_info, descriptor_sets.data()) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create descriptor sets.");
+        }
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            VkDescriptorBufferInfo buffer_info{};
+            buffer_info.buffer = uniform_buffers.at(i);
+            buffer_info.offset = 0;
+            buffer_info.range = sizeof(UniformBufferObject);
+            VkWriteDescriptorSet descriptor_write{};
+            descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptor_write.dstSet = descriptor_sets.at(i);
+            descriptor_write.dstBinding = 0;
+            descriptor_write.dstArrayElement = 0;
+            descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptor_write.descriptorCount = 1;
+            descriptor_write.pBufferInfo = &buffer_info;
+            descriptor_write.pImageInfo = nullptr;
+            descriptor_write.pTexelBufferView = nullptr;
+            vkUpdateDescriptorSets(device, 1, &descriptor_write, 0, nullptr);
+        }
+    }
+
+    void create_uniform_buffers() {
+        VkDeviceSize buffer_size = sizeof(UniformBufferObject);
+        uniform_buffers.resize(MAX_FRAMES_IN_FLIGHT);
+        uniform_buffers_memory.resize(MAX_FRAMES_IN_FLIGHT);
+        uniform_buffers_mapped.resize(MAX_FRAMES_IN_FLIGHT);
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            create_buffer(buffer_size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniform_buffers.at(i), uniform_buffers_memory.at(i));
+            vkMapMemory(device, uniform_buffers_memory.at(i), 0, buffer_size, 0, &uniform_buffers_mapped.at(i));
+        }
+
+    }
+
+    void create_descriptor_set_layout() {
+        VkDescriptorSetLayoutBinding ubo_layout_binding{};
+        ubo_layout_binding.binding = 0;
+        ubo_layout_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        ubo_layout_binding.descriptorCount = 1;
+        ubo_layout_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        ubo_layout_binding.pImmutableSamplers = nullptr;
+        VkDescriptorSetLayoutCreateInfo layout_info{};
+        layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layout_info.bindingCount = 1;
+        layout_info.pBindings = &ubo_layout_binding;
+        if (vkCreateDescriptorSetLayout(device, &layout_info, nullptr, &descriptor_set_layout) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create UBO descriptor set layout");
+        }
     }
 
     void create_index_buffer() {
@@ -543,6 +625,7 @@ private:
         scissor.offset = { 0, 0 };
         scissor.extent = swapchain_extent;
         vkCmdSetScissor(command_buffer, 0, 1, &scissor);
+        vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &descriptor_sets.at(current_frame), 0, nullptr);
         vkCmdDrawIndexed(command_buffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
         // vkCmdDraw(command_buffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
         vkCmdEndRenderPass(command_buffer);
@@ -555,8 +638,21 @@ private:
     void draw();
     void present();
 
+    void update_uniform_buffer(uint32_t current_frame) {
+        static auto start_time = std::chrono::high_resolution_clock::now();
+        auto current_time = std::chrono::high_resolution_clock::now();
+        float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
+        UniformBufferObject ubo{};
+        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.proj = glm::perspective(glm::radians(45.0f), swapchain_extent.width / (float) swapchain_extent.height, 0.1f, 10.0f);
+        ubo.proj[1][1] *= -1;
+        memcpy(uniform_buffers_mapped.at(current_frame), &ubo, sizeof(ubo));
+    }
+
     void draw_frame()
     {
+        update_uniform_buffer(current_frame);
         vkWaitForFences(device, 1, &in_flight_fences.at(current_frame), VK_TRUE, UINT64_MAX);
         vkResetFences(device, 1, &in_flight_fences.at(current_frame));
         uint32_t image_index;
@@ -782,7 +878,7 @@ private:
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         rasterizer.lineWidth = 1.0f;
         rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-        rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+        rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.depthBiasConstantFactor = 0.0f;
         rasterizer.depthBiasClamp = 0.0f;
@@ -824,8 +920,8 @@ private:
 
         VkPipelineLayoutCreateInfo pipeline_layout_ci {};
         pipeline_layout_ci.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipeline_layout_ci.setLayoutCount = 0;
-        pipeline_layout_ci.pSetLayouts = nullptr;
+        pipeline_layout_ci.setLayoutCount = 1;
+        pipeline_layout_ci.pSetLayouts = &descriptor_set_layout;
         pipeline_layout_ci.pushConstantRangeCount = 0;
         pipeline_layout_ci.pPushConstantRanges = nullptr;
         if (vkCreatePipelineLayout(device, &pipeline_layout_ci, nullptr,
@@ -1027,17 +1123,25 @@ private:
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             
-            // auto time_1 = std::chrono::high_resolution_clock::now();
+            auto time_1 = std::chrono::high_resolution_clock::now();
             draw_frame();
-            // auto time_2 = std::chrono::high_resolution_clock::now();
-            // std::chrono::duration<float> frame_time = time_2 - time_1;
-            // float fps = 1.0f / frame_time.count();
-            // std::cout << "FPS: " << fps << std::endl;
+            auto time_2 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> frame_time = time_2 - time_1;
+            float fps = 1.0f / frame_time.count();
+            std::stringstream ss;
+            ss << "fps: " << fps << std::endl;
+            glfwSetWindowTitle(window, ss.str().c_str());
         }
     } 
     void cleanup()
     {
+        for (size_t i = 0; i < image_count; i++) {
+            vkDestroyBuffer(device, uniform_buffers.at(i), nullptr);
+            vkFreeMemory(device, uniform_buffers_memory.at(i), nullptr);
+        }
         vkDeviceWaitIdle(device);
+        vkDestroyDescriptorPool(device, descriptor_pool, nullptr);
+        vkDestroyDescriptorSetLayout(device, descriptor_set_layout, nullptr);
         vkDestroyBuffer(device, index_buffer, nullptr);
         vkFreeMemory(device, index_buffer_memory, nullptr);
         vkDestroyBuffer(device, vertex_buffer, nullptr);
