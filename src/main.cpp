@@ -85,20 +85,20 @@ private:
         short start_vertex;
         short end_vertex;
         short flags;
-        short special_type;
-        short sector_tag;
-        short right_sidedef;
-        short left_sidedef;
+        short special;
+        short tag;
+        short sidenum_1;
+        short sidenum_2;
 
         void print() {
             std::cout << "{"
-            << "start_vertex: " << start_vertex
+            << ";start_vertex: " << start_vertex
             << ";end_vertex: " << end_vertex
             << ";flags: " << flags
-            << ";special_type: " << special_type
-            << ";sector_tag: " << sector_tag
-            << ";right_sidedef: " << right_sidedef
-            << "left_sidedef: " << left_sidedef
+            << ";special: " << special
+            << ";tag: " << tag
+            << ";sidenum_1: " << sidenum_1 
+            << ";sidenum_2: " << sidenum_2
             << " }" 
             << std::endl;
         }
@@ -107,15 +107,34 @@ private:
     struct Sidedef {
         short x_offset;
         short y_offset;
-        char upper_texture[8];
-        char lower_texture[8];
-        char middle_texture[8];
+        std::string upper_texture;
+        std::string lower_texture;
+        std::string middle_texture;
         short sector_facing;
+
+        void print() {
+            std::cout << "{"
+            << "| x_offset: " << x_offset
+            << "| y_offset: " << y_offset
+            << "| upper_texture: " << upper_texture
+            << "| lower_texture: " << lower_texture
+            << "| middle_texture: " << middle_texture
+            << "| sector_facing: " << sector_facing
+            << " }"
+            << std::endl;
+        }
     };
 
     struct Vert {
         short x_position;
         short y_position;
+
+        void print() {
+            std::cout << "{"
+            << "| x_position: " << x_position
+            << "| y_position: " << y_position 
+            << "}" << std::endl;
+        }
     };
 
     struct Seg {
@@ -125,11 +144,29 @@ private:
         short linedef_number;
         short direction;
         short offset;
+
+        void print() {
+            std::cout << "{"
+            << "| start_vertex:" << start_vertex
+            << "| end_vertex:" << end_vertex
+            << "| angle:" << angle
+            << "| linedef_number:" << linedef_number
+            << "| direction:" << direction
+            << "| offset:" << offset
+            << "}" << std::endl;
+        }
     };
 
     struct SSector {
         short seg_count;
         short seg_index;
+
+        void print() {
+            std::cout << "{"
+            << "| seg_count" << seg_count 
+            << "| seg_index" << seg_index
+            << "}" << std::endl;
+        }
     };
 
     struct BoundingBox {
@@ -148,15 +185,39 @@ private:
         BoundingBox left_box;
         short right_child;
         short left_child;
+
+        void print() {
+            std::cout << "{"
+            << "| partition_x: " << partition_x
+            << "| partition_y: " << partition_y
+            << "| partition_x_diff: " << partition_x_diff
+            << "| partition_y_diff: " << partition_y_diff
+            << "| right_child: " << right_child
+            << "| left_child: " << left_child
+            << "}" << std::endl;
+        }
     };
 
     struct Sector {
         short floor_height;
         short ceiling_height;
-        char floor_texture[8];
+        std::string floor_texture;
+        std::string ceiling_texture;
         short light_level;
         short type;
         short tag_number;
+
+        void print() {
+            std::cout << "{"
+            << "| floor_height: " << floor_height
+            << "| ceiling_height: " << ceiling_height
+            << "| floor_texture: " << floor_texture
+            << "| ceiling_texture: " << ceiling_texture 
+            << "| light_level: " << light_level
+            << "| type: " << type
+            << "| tag_number: " << tag_number
+            << "}" << std::endl;
+        }
     };
 
 
@@ -188,6 +249,15 @@ private:
     };
 
     int wad_pointer = 0;
+    
+    std::string parse_string(const std::vector<char> &data) {
+        std::vector<char> buffer;
+        for (int i =0; i < 8; i++) {
+            buffer.push_back(data.at(wad_pointer));
+            wad_pointer ++;
+        }
+        return std::string(buffer.begin(), buffer.end());
+    }
 
     void parse_things(const std::vector<char> &data) {
         Map &current_map = wad.maps.back();
@@ -202,9 +272,7 @@ private:
             current_thing.direction = parse_short(data);
             current_thing.type = parse_short(data);
             current_thing.flags = parse_short(data);
-            current_thing.print();
         }
-        throw std::runtime_error("nopington");
     };
 
     void parse_linedefs(const std::vector<char> &data) {
@@ -213,23 +281,116 @@ private:
         
         wad_pointer = current_lump.filepos;
         while (wad_pointer < (current_lump.filepos + current_lump.size)) {
-            // @todo: Finish the linedefs, make sure the definition is correct.
             current_map.linedefs.push_back({});
             Linedef &current_linedef = current_map.linedefs.back();
             current_linedef.start_vertex = parse_short(data);
             current_linedef.end_vertex = parse_short(data);
             current_linedef.flags = parse_short(data);
-            current_thing.print();
+            current_linedef.special = parse_short(data);
+            current_linedef.tag = parse_short(data);
+            current_linedef.sidenum_1 = parse_short(data);
+            current_linedef.sidenum_2 = parse_short(data);
         }
-        throw std::runtime_error("nopington");
-
     };
-    void parse_sidedefs() {};
-    void parse_vertices() {};
-    void parse_segs() {};
-    void parse_ssectors() {};
-    void parse_nodes() {};
-    void parse_sectors() {};
+
+    void parse_sidedefs(const std::vector<char> &data) {
+        Map &current_map = wad.maps.back();
+        Lump &current_lump = wad.lumps.back();
+        wad_pointer = current_lump.filepos;
+        while (wad_pointer < (current_lump.filepos + current_lump.size)) {
+            current_map.sidedefs.push_back({});
+            Sidedef &current_sidedef = current_map.sidedefs.back();
+            current_sidedef.x_offset = parse_short(data);
+            current_sidedef.y_offset = parse_short(data);
+            current_sidedef.upper_texture = parse_string(data);
+            current_sidedef.lower_texture = parse_string(data);
+            current_sidedef.middle_texture = parse_string(data);
+            current_sidedef.sector_facing = parse_short(data);
+        }
+    };
+
+    void parse_vertices(const std::vector<char> &data) {
+        Map &current_map = wad.maps.back();
+        Lump &current_lump = wad.lumps.back();
+        wad_pointer = current_lump.filepos;
+        while (wad_pointer < (current_lump.filepos + current_lump.size)) {
+            current_map.vertices.push_back({});
+            Vert &current_vertex = current_map.vertices.back();
+            current_vertex.x_position = parse_short(data);
+            current_vertex.y_position = parse_short(data);
+        }
+    };
+
+    void parse_segs(const std::vector<char> &data) {
+        Map &current_map = wad.maps.back();
+        Lump &current_lump = wad.lumps.back();
+        wad_pointer = current_lump.filepos;
+        while (wad_pointer < (current_lump.filepos + current_lump.size)) {
+            current_map.segs.push_back({});
+            Seg &current_seg = current_map.segs.back();
+            current_seg.start_vertex = parse_short(data);
+            current_seg.end_vertex = parse_short(data);
+            current_seg.angle = parse_short(data);
+            current_seg.linedef_number = parse_short(data);
+            current_seg.direction = parse_short(data);
+            current_seg.offset = parse_short(data);
+        }
+    };
+    void parse_ssectors(const std::vector<char> &data) {
+        Map &current_map = wad.maps.back();
+        Lump &current_lump = wad.lumps.back();
+        wad_pointer = current_lump.filepos;
+        while (wad_pointer < (current_lump.filepos + current_lump.size)) {
+            current_map.ssectors.push_back({});
+            SSector current_ssector = current_map.ssectors.back();
+            current_ssector.seg_count = parse_short(data);
+            current_ssector.seg_index = parse_short(data);
+        }
+    };
+    
+    BoundingBox parse_bounding_box(const std::vector<char> &data, Node &current_node) {
+        BoundingBox bounding_box;
+        bounding_box.top = parse_short(data);
+        bounding_box.bottom = parse_short(data);
+        bounding_box.left = parse_short(data);
+        bounding_box.right = parse_short(data);
+        return bounding_box;
+    };
+
+    void parse_nodes(const std::vector<char> &data) {
+        Map &current_map = wad.maps.back();
+        Lump &current_lump = wad.lumps.back();
+        wad_pointer = current_lump.filepos;
+        while (wad_pointer < (current_lump.filepos + current_lump.size)) {
+            current_map.nodes.push_back({});
+            Node current_node = current_map.nodes.back();
+            current_node.partition_x = parse_short(data); 
+            current_node.partition_y = parse_short(data);
+            current_node.partition_x_diff = parse_short(data);
+            current_node.partition_y_diff = parse_short(data);
+            current_node.right_box = parse_bounding_box(data, current_node);
+            current_node.left_box = parse_bounding_box(data, current_node);
+            current_node.right_child = parse_short(data);
+            current_node.left_child = parse_short(data);
+         }
+    };
+
+    void parse_sectors(const std::vector<char> &data) {
+        Map &current_map = wad.maps.back();
+        Lump &current_lump = wad.lumps.back();
+        wad_pointer = current_lump.filepos;
+        while (wad_pointer < (current_lump.filepos + current_lump.size)) {
+            current_map.sectors.push_back({});
+            Sector current_sector = current_map.sectors.back();
+            current_sector.floor_height = parse_short(data);
+            current_sector.ceiling_height = parse_short(data);
+            current_sector.floor_texture = parse_string(data);
+            current_sector.ceiling_texture = parse_string(data);
+            current_sector.light_level = parse_short(data);
+            current_sector.type = parse_short(data);
+            current_sector.tag_number = parse_short(data);
+        }
+    };
 
     bool string_subset_equals(std::string x, std::string y) {
         int length = std::min(x.size(), y.size());
@@ -266,27 +427,27 @@ private:
             }
 
             if (string_subset_equals(lump.name, "SIDEDEFS")) {
-                parse_sidedefs();
+                parse_sidedefs(data);
             }
 
             if (string_subset_equals(lump.name, "VERTEXES")) {
-                parse_vertices();
+                parse_vertices(data);
             }
 
             if (string_subset_equals(lump.name, "SEGS")) {
-                parse_segs();
+                parse_segs(data);
             }
 
             if (string_subset_equals(lump.name, "SSECTORS")) {
-                parse_ssectors();
+                parse_ssectors(data);
             }
 
             if (string_subset_equals(lump.name, "NODES")) {
-                parse_nodes();
+                parse_nodes(data);
             }
 
             if (string_subset_equals(lump.name, "SECTORS")) {
-                parse_sectors();
+                parse_sectors(data);
             }
 
         }
@@ -1581,6 +1742,7 @@ private:
         return indices.is_complete() && extensions_supported && swapchain_adequate;
     }
 };
+
 
 int main()
 {
