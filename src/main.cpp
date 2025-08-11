@@ -43,7 +43,7 @@ class Application {
 public:
     void run()
     {
-        load_wad("assets/game.wad");
+        // load_wad("assets/game.wad");
         init_window();
         init_vulkan();
         main_loop();
@@ -51,6 +51,8 @@ public:
     }
 
 private:
+    int rendering_mode = 1;
+
     enum WadType {
         IWAD,
         PWAD
@@ -507,11 +509,10 @@ private:
         parse_wad_type(data);
         parse_directory(data);
     }
-
+    
     void load_wad(const char * path) {
         std::vector<char> data = read_file(path);
         parse_header(data);
-        throw std::runtime_error("cool beanz");
     };
 
     struct UniformBufferObject {
@@ -834,6 +835,7 @@ private:
         }
     }
 
+
     void init_vulkan()
     {
         std::cout << "Initialising Vulkan." << std::endl;
@@ -857,6 +859,7 @@ private:
         create_descriptor_sets();
         create_command_buffers();
         create_sync_objects();
+        std::cout << "Done" << std::endl;
     }
     
     void create_descriptor_pool() {
@@ -949,7 +952,7 @@ private:
     void create_buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &buffer_memory) {
         VkBufferCreateInfo buffer_info{};
         buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        buffer_info.size = sizeof(vertices[0]) * vertices.size();
+        buffer_info.size = size;
         buffer_info.usage = usage;
         buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         if (vkCreateBuffer(device, &buffer_info, nullptr, &buffer) != VK_SUCCESS) {
@@ -1097,20 +1100,70 @@ private:
         }
     }
 
-    void acquire_next_image();
-    void draw();
-    void present();
-
     void update_uniform_buffer(uint32_t current_frame) {
         static auto start_time = std::chrono::high_resolution_clock::now();
         auto current_time = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
         UniformBufferObject ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.proj = glm::perspective(glm::radians(45.0f), swapchain_extent.width / (float) swapchain_extent.height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
         memcpy(uniform_buffers_mapped.at(current_frame), &ubo, sizeof(ubo));
+    }
+
+
+
+    void draw_map(int map_index) {
+        Map &selected_map = wad.maps.at(map_index);
+    }
+
+    void draw_frame_2()
+    {
+        update_uniform_buffer(current_frame);
+        vkWaitForFences(device, 1, &in_flight_fences.at(current_frame), VK_TRUE, UINT64_MAX);
+        vkResetFences(device, 1, &in_flight_fences.at(current_frame));
+        uint32_t image_index;
+        vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
+            image_available_semphs.at(current_frame),
+            VK_NULL_HANDLE, &image_index);
+        vkResetCommandBuffer(command_buffers.at(current_frame), 0);
+        record_command_buffer(command_buffers.at(current_frame), image_index);
+        VkPipelineStageFlags wait_stages[]
+            = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        VkSubmitInfo submit_info {};
+        submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submit_info.waitSemaphoreCount = 1;
+        submit_info.pWaitSemaphores = &image_available_semphs.at(current_frame);
+        submit_info.pWaitDstStageMask = wait_stages;
+        submit_info.commandBufferCount = 1;
+        submit_info.pCommandBuffers = &command_buffers.at(current_frame);
+        submit_info.signalSemaphoreCount = 1;
+        submit_info.pSignalSemaphores = &render_finished_semphs.at(image_index);
+        if (vkQueueSubmit(graphics_queue, 1, &submit_info,
+                in_flight_fences.at(current_frame))
+            != VK_SUCCESS) {
+            throw std::runtime_error("Failed to submit draw command buffer");
+        }
+        VkSubpassDependency dependency {};
+        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        dependency.dstSubpass = 0;
+        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        render_pass_info.dependencyCount = 1;
+        render_pass_info.pDependencies = &dependency;
+        VkPresentInfoKHR present_info {};
+        present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        present_info.waitSemaphoreCount = 1;
+        present_info.pWaitSemaphores = &render_finished_semphs.at(image_index);
+        VkSwapchainKHR swapchains[] = { swapchain };
+        present_info.swapchainCount = 1;
+        present_info.pSwapchains = swapchains;
+        present_info.pImageIndices = &image_index;
+        present_info.pResults = nullptr;
+        vkQueuePresentKHR(present_queue, &present_info);
+        current_frame++;
+        current_frame *= (current_frame < image_count);
     }
 
     void draw_frame()
@@ -1124,10 +1177,8 @@ private:
             VK_NULL_HANDLE, &image_index);
         vkResetCommandBuffer(command_buffers.at(current_frame), 0);
         record_command_buffer(command_buffers.at(current_frame), image_index);
-
         VkPipelineStageFlags wait_stages[]
             = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-
         VkSubmitInfo submit_info {};
         submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submit_info.waitSemaphoreCount = 1;
@@ -1263,7 +1314,7 @@ private:
 
     void create_graphics_pipeline()
     {
-        // TODO: Seperate source shaders from compiled shaders.
+        // @todo: Seperate source shaders from compiled shaders.
         auto vert_src = read_file("shaders/vert.spv");
         auto frag_src = read_file("shaders/frag.spv");
 
@@ -1587,13 +1638,27 @@ private:
             glfwPollEvents();
             
             auto time_1 = std::chrono::high_resolution_clock::now();
-            draw_frame();
+            if  (rendering_mode == 1) {
+                draw_frame();
+            }
+
+            if (rendering_mode == 2) {
+                draw_frame_2();
+            }
+            
             auto time_2 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<float> frame_time = time_2 - time_1;
             float fps = 1.0f / frame_time.count();
             std::stringstream ss;
             ss << "fps: " << fps << std::endl;
             glfwSetWindowTitle(window, ss.str().c_str());
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+                rendering_mode = 1;
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+                rendering_mode = 2;
+            }
         }
     } 
     void cleanup()
@@ -1755,3 +1820,4 @@ int main()
     }
     return EXIT_SUCCESS;
 }
+
