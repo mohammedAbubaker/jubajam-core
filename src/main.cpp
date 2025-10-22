@@ -1,3 +1,4 @@
+#include <format>
 #include <unordered_map>
 #include "glm/ext/matrix_float3x3.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
@@ -146,7 +147,7 @@ unsigned int texture_from_memory(const aiTexture *texture) {
     int width;
     int height;
     int nr_components;
-    std::cout << texture->mFilename.C_Str() << std::endl;
+    // std::cout << texture->mFilename.C_Str() << std::endl;
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
     unsigned char *data = stbi_load_from_memory(
@@ -220,7 +221,7 @@ std::unordered_map<std::string, texture> load_material_textures(
             t.id = texture_from_memory(scene->mTextures[texture_index]);
         }
         t.type = type_name;
-        t.path = str.C_Str();
+       t.path = str.C_Str();
         t.texture_unit = i;
         texture_map[t.path] = t;
     }
@@ -475,6 +476,8 @@ struct InputMap {
     bool    key_s;
     bool    key_d;
     bool    key_r;
+    bool    key_f;
+    bool    key_g;
     bool    mouse_left;
     float   mouse_x;
     float   mouse_y;
@@ -494,42 +497,51 @@ struct GameState {
     int n;
 };
 
+struct EntityParameter {
+    glm::mat4x4 transform;
+    int model_id;
+    int entity_type;
+    glm::vec3 position;
+    glm::vec3 displacement;
+};
+
+void create_entity(const EntityParameter &entity_parameter, GameState &game_state) {
+    game_state.min_aabb.push_back(game_state.models.at(entity_parameter.model_id).bb_lower);
+    game_state.max_aabb.push_back(game_state.models.at(entity_parameter.model_id).bb_upper);
+    game_state.transforms.push_back(entity_parameter.transform);
+    game_state.model_id.push_back(entity_parameter.model_id);
+    game_state.entity_type.push_back(entity_parameter.entity_type);
+    game_state.position.push_back(entity_parameter.position);
+    game_state.displacement.push_back(entity_parameter.displacement);
+}
+
 /* Generates a test game state for experimentation */
 void test_game_state(GameState &game_state) {
-    std::vector<std::string> map = {
-        "ab"
+    load_models({"assets/dinosaur.glb", "bob_walking.fbx"}, game_state.models);
+    // Set the player
+    // glm::mat4x4 transform;
+    // int model_id;
+    // int entity_type;
+    // glm::vec3 position;
+    // glm::vec3 displacement;
+ 
+    const EntityParameter player_parameter = {
+        .transform  = glm::mat4x4(1.0),
+        .model_id = 0,
+        .entity_type = 0,
+        .position = glm::vec3(0.0),
+        .displacement = glm::vec3(0.0)
     };
-    load_models({"../assets/floor.glb", "../assets/JackSparrow.glb"}, game_state.models);
-    auto tile_position = glm::vec3(0, 0, 0);
-    for (std::string row: map) {
-        for (char entity: row) {
-            unsigned int model_id;
-            if (entity == 'a') {
-                model_id = 0;
-                game_state.position.push_back(tile_position);
-            }
-            if (entity == 'b') {
-                model_id = 1;
-                game_state.position.push_back(glm::vec3(0,2,0));
-            }
-
-            game_state.model_id.push_back(model_id);
-            game_state.displacement.push_back(glm::vec3(0));
-            auto transform = glm::mat4x4(1.0f);
-            // Will probs need to apply some sort of transform
-            game_state.max_aabb.push_back(game_state.models[model_id].bb_upper);
-            game_state.min_aabb.push_back(game_state.models[model_id].bb_lower);
-            auto model = game_state.models.at(model_id);
-            // transform = glm::translate(transform, -model.bb_centre);
-            // transform = glm::translate(transform, tile_position);
-            // double scale_factor = 25.0f / (model.bb_upper - model.bb_lower).x;
-            // transform  = glm::scale(transform, glm::vec3(scale_factor));
-            game_state.transforms.push_back(transform);
-            // tile_position += glm::vec3(1, 0.0, 0.0);
-        }
-        // tile_position += glm::vec3(0.0, 1, 0.0);
-    }
-
+    create_entity(player_parameter, game_state);
+    // Set the bot
+    const EntityParameter bot_parameter = {
+        .transform = glm::mat4x4(1.0),
+        .model_id = 0,
+        .entity_type = 0,
+        .position = glm::vec3(0.0),
+        .displacement = glm::vec3(0.0)
+    };
+    create_entity(bot_parameter, game_state);
     game_state.n = game_state.model_id.size();
 }
 
@@ -570,6 +582,15 @@ bool detect_collision(
 }
 
 void process_inputs(const InputMap &input_map, GameState &game_state) {
+    auto wish_dir = glm::vec3(0.0);
+    if (input_map.key_w) wish_dir += glm::vec3(0.0, 0.0, 0.05);
+    if (input_map.key_a) wish_dir += glm::vec3(0.05, 0.0, 0.0);
+    if (input_map.key_s) wish_dir += glm::vec3(0.0, 0.0, -0.05);
+    if (input_map.key_d) wish_dir += glm::vec3(-0.05, 0.0, 0.0);
+    if (input_map.key_f) wish_dir += glm::vec3(0.0, -0.05, 0.0);
+    if (input_map.key_g) wish_dir += glm::vec3(0.0, 0.05, 0.0);
+    game_state.position.at(0) += (wish_dir * glm::vec3(0.01));
+    /*
     bool colliding = detect_collision(
         game_state.models[0].bb_lower,
         game_state.models[0].bb_upper,
@@ -590,10 +611,11 @@ void process_inputs(const InputMap &input_map, GameState &game_state) {
     if (colliding) {
         displacement.y = 0;
     }
-    game_state.position[1] += displacement;
-    game_state.displacement[1] += displacement;
+    game_state.position[0] += displacement;
+    game_state.displacement[0] += displacement;
+    */
 }
- 
+
 int main() {
     if (!glfwInit()) {
         std::fprintf(stderr, "GLFW: Error initialising glfwInit\n");
@@ -612,6 +634,7 @@ int main() {
         return 1;
     }
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
     std::fprintf(stdout, "GLFW: Window creation successful\n");
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -622,10 +645,9 @@ int main() {
     stbi_set_flip_vertically_on_load(false);
     GameState game_state;
     test_game_state(game_state);
-
     std::cout << "Loading shaders..." << std::endl;
-    shader s = load_shader("../src/vert.glsl", "../src/frag.glsl");
-    shader bbox_s = load_shader("../src/bboxvert.glsl", "../src/bboxfrag.glsl");
+    shader s = load_shader("./src/vert.glsl", "./src/frag.glsl");
+    shader bbox_s = load_shader("./src/bboxvert.glsl", "./src/bboxfrag.glsl");
     for (model &mdl : game_state.models) {
         std::cout << "setting up" << std::endl;
         setup_model(mdl);
@@ -644,16 +666,21 @@ int main() {
         game_state.models.at(model_id).bb_upper += game_state.position[model_id];
     }
     while (!glfwWindowShouldClose(window)) {
+        auto start_time = glfwGetTime();
         input_map.key_w = false;
         input_map.key_a = false;
         input_map.key_s = false;
         input_map.key_d = false;
+        input_map.key_f = false;
+        input_map.key_g = false;
         input_map.key_r = false;
         glfwPollEvents();
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) input_map.key_w = true;
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) input_map.key_a = true;
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) input_map.key_s = true;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) input_map.key_d = true;
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) input_map.key_f = true;
+        if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) input_map.key_g = true;
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) input_map.key_r = true;
         glClearColor(0.44f, 0.57f, 0.74f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -662,19 +689,21 @@ int main() {
         glUniformMatrix4fv(glGetUniformLocation(s.id, "projection"), 1, GL_FALSE, &projection[0][0]);
         int curr_index = 0;
         process_inputs(input_map, game_state);
-        for (unsigned int model_id: game_state.model_id) {
-            glm::mat4x4 transform = glm::translate(glm::mat4x4(1.0f), game_state.position[model_id]);
+        for (int curr_entity = 0; curr_entity < game_state.n; curr_entity++) {
+            glm::mat4x4 transform = glm::translate(glm::mat4x4(1.0f), game_state.position[curr_entity]);
+            int model_id = game_state.model_id.at(curr_entity);
             game_state.models.at(model_id).bb_lower += game_state.displacement[model_id];
             game_state.models.at(model_id).bb_upper += game_state.displacement[model_id];
             glUniformMatrix4fv(glGetUniformLocation(s.id, "model"), 1, GL_FALSE, &transform[0][0]);
-            draw_bounding_box(game_state.models.at(model_id), bbox_s, game_state.position[curr_index], view, projection);
+            draw_bounding_box(game_state.models.at(model_id), bbox_s, game_state.position[curr_entity], view, projection);
             draw_model(game_state.models.at(model_id), s);
-            // game_state.transforms.at(model_id)
-            game_state.displacement[model_id] = glm::vec3(0);
+            game_state.displacement[curr_entity] = glm::vec3(0);
             curr_index += 1;
         }
-
         glfwSwapBuffers(window);
+        auto end_time = glfwGetTime();
+        const auto frame_rate = std::format("{}", 1 / (end_time - start_time));
+        glfwSetWindowTitle(window, frame_rate.c_str());
     }
     glfwTerminate();
     return 0;
